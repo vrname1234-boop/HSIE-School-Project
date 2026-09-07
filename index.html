@@ -3,119 +3,499 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saladin — HSIE Assessment</title>
-<script>document.documentElement.classList.add('js');</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<title>Saladin — Source Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ebe3cf;--paper:#faf6ee;--ink:#2a2218;
+  --mid:#6b5d4f;--green:#14532d;--gold:#b45309;
+  --spice:#9b1c1c;--sh:rgba(42,34,24,.13);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background-color:var(--bg);
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(42,34,24,.05) 27px,rgba(42,34,24,.05) 28px);
+  font-family:'Lora',serif;color:var(--ink);min-height:100vh;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:#d0c8b0;
+  border-bottom:2px solid rgba(42,34,24,.18);
+  padding:0 1.2rem;
+  display:flex;align-items:stretch;
+  box-shadow:0 2px 8px var(--sh);
+}
+.nav-brand{
+  font-family:'Caveat',cursive;font-size:1.2rem;font-weight:700;
+  color:var(--green);padding:.7rem 1rem .7rem 0;
+  margin-right:.5rem;white-space:nowrap;
+  border-right:1px solid rgba(42,34,24,.15);
+  display:flex;align-items:center;gap:.3rem;
+  background:none;border-top:none;border-bottom:none;border-left:none;
+  cursor:pointer;text-decoration:none;transition:color .15s;
+}
+.nav-brand:hover{color:var(--gold);}
+.nav-links{display:flex;align-items:stretch;overflow-x:auto;flex:1;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-links a{
+  font-family:'Caveat',cursive;font-size:1rem;font-weight:600;
+  color:var(--mid);text-decoration:none;padding:.7rem .8rem;
+  border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;
+}
+.nav-links a em{font-style:normal;font-family:'Special Elite',monospace;font-size:.7rem;color:var(--gold);}
+.nav-links a:hover{color:var(--ink);border-bottom-color:var(--gold);background:rgba(255,255,255,.25);}
+.nav-right{display:flex;align-items:stretch;margin-left:auto;}
+#ver-btn{
+  background:none;border:none;border-left:1px solid rgba(42,34,24,.15);
+  font-family:'Caveat',cursive;font-size:1rem;font-weight:600;
+  color:var(--mid);padding:0 1rem;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+#ver-btn:hover{background:rgba(255,255,255,.3);color:var(--green);}
+
+/* LAYOUT */
+.wrap{max-width:820px;margin:0 auto;padding:2rem 1.4rem 5rem;}
+
+/* HERO */
+.hero{text-align:center;padding:3rem 1rem 2rem;}
+.hero-name{display:block;font-family:'Caveat',cursive;font-size:1.3rem;font-weight:600;color:var(--mid);letter-spacing:.04em;margin-bottom:.3rem;font-style:italic;}
+.hero-mark{font-family:'Special Elite',monospace;font-size:.8rem;letter-spacing:.3em;color:var(--gold);display:block;margin-bottom:.6rem;}
+.hero h1{font-family:'Caveat',cursive;font-size:clamp(2.1rem,6vw,3.4rem);font-weight:700;color:var(--ink);line-height:1.1;margin-bottom:.4rem;}
+.hero-sub{font-style:italic;color:var(--mid);font-size:1.05rem;margin-bottom:1.4rem;}
+.hero-stamp{
+  display:inline-block;background:var(--paper);
+  border:1.5px dashed rgba(42,34,24,.25);padding:.5rem 1.3rem;
+  font-family:'Special Elite',monospace;font-size:.8rem;color:var(--mid);line-height:1.9;
+  transform:rotate(-.5deg);box-shadow:2px 3px 7px var(--sh);
+}
+
+/* SECTION HEADER */
+.sh{
+  font-family:'Caveat',cursive;font-size:1.9rem;font-weight:700;
+  color:var(--green);margin:2.5rem 0 .9rem;padding-bottom:.3rem;
+  border-bottom:2.5px solid rgba(20,83,45,.2);position:relative;
+}
+.sh em{font-style:normal;font-family:'Special Elite',monospace;font-size:.8rem;color:var(--gold);letter-spacing:.08em;}
+.sh::after{content:'';position:absolute;top:-2px;right:8px;width:54px;height:13px;transform:rotate(-3deg);opacity:.75;}
+.ty::after{background:rgba(253,224,71,.6);}
+.tg::after{background:rgba(20,83,45,.25);}
+.tp::after{background:rgba(251,182,206,.65);}
+.tb::after{background:rgba(147,197,253,.6);}
+.sub-h{font-family:'Caveat',cursive;font-size:1.5rem;font-weight:700;color:var(--ink);margin:1.6rem 0 .6rem;}
+
+/* CARD */
+.card{background:var(--paper);padding:1.6rem 1.9rem;margin-bottom:1.2rem;box-shadow:2px 3px 10px var(--sh),-1px 1px 4px rgba(0,0,0,.04);}
+.card p{margin-bottom:.9rem;line-height:1.85;}
+.card p:last-child{margin-bottom:0;}
+
+/* SOURCE ENTRIES (Part A) */
+.src{background:var(--paper);padding:1.6rem 1.9rem 1.4rem;margin-bottom:2rem;position:relative;box-shadow:3px 4px 13px var(--sh),-1px 1px 5px rgba(0,0,0,.04);}
+.src:nth-of-type(odd){transform:rotate(-.35deg);}
+.src:nth-of-type(even){transform:rotate(.3deg);}
+.src::before{content:'';position:absolute;top:-7px;left:28px;width:64px;height:16px;transform:rotate(-2deg);}
+.yw::before{background:rgba(253,224,71,.55);}
+.gn::before{background:rgba(20,83,45,.22);}
+.src-lbl{font-family:'Caveat',cursive;font-size:1.65rem;font-weight:700;color:var(--ink);margin-bottom:.2rem;display:block;}
+.src-lbl em{font-style:normal;background:var(--green);color:#f4ede0;font-size:.72rem;font-family:'Special Elite',monospace;padding:.1rem .65rem;vertical-align:middle;margin-right:.45rem;letter-spacing:.07em;}
+.src-lbl em.pri{background:var(--spice);}
+.src-work{font-style:italic;color:var(--mid);margin-bottom:1rem;}
+.opvl{border-left:3px solid rgba(20,83,45,.25);padding-left:.9rem;margin-bottom:1rem;}
+.opvl:last-child{margin-bottom:0;}
+.opvl h4{font-family:'Special Elite',monospace;font-size:.8rem;letter-spacing:.14em;color:var(--green);margin-bottom:.25rem;}
+.opvl.v{border-left-color:rgba(180,83,9,.4);}
+.opvl.v h4{color:var(--gold);}
+.opvl.l{border-left-color:rgba(155,28,28,.35);}
+.opvl.l h4{color:var(--spice);}
+.opvl p{line-height:1.85;}
+
+/* TABLES */
+.t-wrap{overflow-x:auto;margin:1.1rem 0;}
+table{width:100%;border-collapse:collapse;font-family:'Special Elite',monospace;font-size:.86rem;}
+th{background:var(--green);color:#f4ede0;padding:.55rem .8rem;text-align:left;font-weight:400;letter-spacing:.05em;}
+td{padding:.5rem .8rem;border-bottom:1px solid rgba(42,34,24,.1);vertical-align:top;}
+tr:nth-child(even) td{background:rgba(235,227,209,.4);}
+tr:last-child td{border-bottom:none;}
+.t-head{font-family:'Caveat',cursive;font-size:1.15rem;font-weight:600;margin-bottom:.5rem;}
+.judgement{background:rgba(20,83,45,.07);border-left:3px solid var(--green);padding:.9rem 1.1rem;margin-top:1.1rem;}
+.judgement p{margin:0;line-height:1.85;}
+
+/* TIMELINE (Part B) */
+.tl{list-style:none;margin:.4rem 0 0;}
+.tl li{display:grid;grid-template-columns:96px 1fr;gap:.8rem;padding:.55rem 0;border-bottom:1px dashed rgba(42,34,24,.15);}
+.tl li:last-child{border-bottom:none;}
+.tl b{font-family:'Special Elite',monospace;font-size:.85rem;color:var(--spice);}
+.tl span{line-height:1.8;}
+
+/* VISUALS */
+.vis{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;margin-top:.6rem;}
+figure{background:var(--paper);padding:.7rem .7rem .1rem;box-shadow:3px 4px 13px var(--sh);position:relative;}
+figure:nth-child(3n+1){transform:rotate(-.6deg);}
+figure:nth-child(3n+2){transform:rotate(.45deg);}
+figure:nth-child(3n){transform:rotate(-.25deg);}
+figure::before{content:'';position:absolute;top:-8px;left:50%;margin-left:-32px;width:64px;height:16px;background:rgba(253,224,71,.5);transform:rotate(-2deg);}
+figure img{width:100%;height:200px;object-fit:cover;display:block;cursor:zoom-in;}
+figure figcaption{font-family:'Caveat',cursive;font-size:1.1rem;color:var(--mid);padding:.5rem .3rem .7rem;line-height:1.35;}
+figure figcaption b{display:block;font-family:'Special Elite',monospace;font-size:.72rem;color:var(--ink);letter-spacing:.04em;margin-bottom:.15rem;}
+.mini-tl{height:200px;background:rgba(235,227,209,.55);padding:1rem 1.1rem;display:grid;align-content:center;gap:.4rem;}
+.mini-tl div{display:grid;grid-template-columns:52px 1fr;gap:.5rem;align-items:baseline;}
+.mini-tl b{font-family:'Special Elite',monospace;font-size:.8rem;color:var(--spice);}
+.mini-tl span{font-size:.9rem;}
+.bookcover{height:200px;background:#14532d;color:#f4ede0;display:flex;flex-direction:column;justify-content:center;gap:.6rem;text-align:center;padding:1.2rem;border-left:8px solid #0d3d1d;}
+.bookcover small{font-family:'Special Elite',monospace;font-size:.62rem;letter-spacing:.14em;color:#e7c98a;}
+.bookcover b{font-family:'Lora',serif;font-size:1.02rem;line-height:1.4;}
+.bookcover i{font-family:'Caveat',cursive;font-size:1.25rem;font-style:normal;}
+
+/* LIGHTBOX */
+#lb{display:none;position:fixed;inset:0;background:rgba(20,15,9,.9);z-index:500;padding:2rem;cursor:zoom-out;}
+#lb.open{display:grid;place-items:center;}
+#lb img{max-width:min(1000px,92vw);max-height:82vh;object-fit:contain;box-shadow:0 18px 50px rgba(0,0,0,.6);}
+#lb p{color:#e8dcc4;font-family:'Caveat',cursive;font-size:1.2rem;text-align:center;margin-top:.7rem;}
+
+/* DRAFTS / VERSION HISTORY */
+#version-history{display:none;}
+.vwrap{max-width:820px;margin:0 auto;padding:2rem 1.4rem 5rem;}
+.v-back{background:none;border:none;cursor:pointer;font-family:'Caveat',cursive;font-size:1.1rem;font-weight:600;color:var(--green);text-decoration:underline;text-underline-offset:3px;margin-bottom:1.5rem;display:block;padding:0;}
+.v-title{font-family:'Caveat',cursive;font-size:2.2rem;font-weight:700;color:var(--ink);margin-bottom:.25rem;}
+.v-sub{font-style:italic;font-size:.88rem;color:var(--mid);margin-bottom:1rem;}
+.v-note{background:rgba(20,83,45,.07);border-left:3px solid var(--green);padding:.75rem 1rem;font-size:.85rem;color:var(--mid);font-style:italic;margin-bottom:1.5rem;line-height:1.6;}
+.v-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.v-tab{font-family:'Caveat',cursive;font-size:1.05rem;font-weight:700;padding:.4rem 1rem;border:2px solid rgba(42,34,24,.2);background:var(--paper);color:var(--mid);cursor:pointer;transition:all .15s;}
+.v-tab:hover{background:rgba(20,83,45,.1);color:var(--ink);}
+.v-tab.active{background:var(--green);color:#f4ede0;border-color:var(--green);}
+.v-tab.final{border-color:var(--gold);}
+.v-tab.final.active{background:var(--gold);border-color:var(--gold);}
+.ver-panel{display:none;}
+.ver-panel.show{display:block;}
+.ver-meta{background:var(--paper);padding:.9rem 1.2rem;margin-bottom:1rem;box-shadow:1px 2px 6px var(--sh);display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;}
+.ver-tag{font-family:'Special Elite',monospace;font-size:.8rem;background:var(--green);color:#f4ede0;padding:.12rem .6rem;}
+.ver-tag.gold{background:var(--gold);}
+.ver-date{font-style:italic;font-size:.82rem;color:var(--mid);}
+.ver-name{font-family:'Caveat',cursive;font-size:1.1rem;font-weight:700;color:var(--ink);}
+.draft{background:var(--paper);padding:1.5rem 1.8rem;box-shadow:2px 3px 10px var(--sh);line-height:1.8;font-size:.93rem;}
+.draft h3{font-family:'Caveat',cursive;font-size:1.4rem;font-weight:700;color:var(--green);margin:1.2rem 0 .4rem;}
+.draft h3:first-child{margin-top:0;}
+.draft h4{font-family:'Caveat',cursive;font-size:1.15rem;font-weight:600;color:var(--gold);margin:.9rem 0 .3rem;}
+.draft p{margin-bottom:.75rem;}
+.draft ul{padding-left:1.3rem;margin-bottom:.75rem;color:var(--mid);font-size:.9rem;}
+.draft-note{font-style:italic;font-size:.82rem;color:var(--mid);border-left:2px solid rgba(42,34,24,.2);padding-left:.7rem;margin:.5rem 0;}
+
+@media(max-width:600px){
+  .wrap,.vwrap{padding:1.5rem 1rem 4rem;}
+  .card,.src{padding:1.2rem;}
+  nav{padding:0 .75rem;}
+  .nav-brand{font-size:1rem;}
+  table{font-size:.78rem;}
+  .tl li{grid-template-columns:1fr;gap:.1rem;}
+}
+</style>
 </head>
 <body>
-<div id="progress"></div>
 
-<header class="nav">
-  <div class="wrap nav__inner">
-    <a class="brand" href="index.html">
-      <span class="brand__mark" aria-hidden="true">S</span>
-      <span class="brand__text">SALADIN<span>HSIE Assessment</span></span>
-    </a>
-    <button class="nav__toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
-    <ul class="nav__links">
-      <li><a class="is-active" href="index.html">HOME</a></li>
-      <li><a href="part-a.html">PART A <small>Source Analysis</small></a></li>
-      <li><a href="part-b.html">PART B <small>Biography Poster</small></a></li>
-      <li><a href="part-c.html">PART C <small>Source Evaluation</small></a></li>
-    </ul>
+<!-- NAV -->
+<nav>
+  <button class="nav-brand" onclick="goHome()">Saladin</button>
+  <div class="nav-links">
+    <a href="#intro" onclick="goTo('intro');return false;">Intro</a>
+    <a href="#parta" onclick="goTo('parta');return false;">Part A <em>(Source Analysis)</em></a>
+    <a href="#partb" onclick="goTo('partb');return false;">Part B <em>(Biography Poster)</em></a>
+    <a href="#partc" onclick="goTo('partc');return false;">Part C <em>(Source Evaluation)</em></a>
   </div>
-</header>
+  <div class="nav-right">
+    <button id="ver-btn" onclick="toggleVer()">Drafts</button>
+  </div>
+</nav>
 
-<div class="hero">
-  <div class="hero__bg" style="background-image:url('images/hattin.jpg')"></div>
-  <div class="wrap hero__inner">
-    <p class="hero__kicker">History · Source study</p>
-    <h1>SALADIN<em>SALAH AL-DIN YUSUF IBN AYYUB</em></h1>
-    <p class="hero__sub">Sultan of Egypt and Syria · first ruler of the Ayyubid dynasty</p>
-    <div class="hero__stamp">PART A · SOURCE ANALYSIS &nbsp;—&nbsp; PART B · BIOGRAPHY POSTER &nbsp;—&nbsp; PART C · SOURCE EVALUATION</div>
-    <div class="hero__dates">
-      <div><b>c. 1137</b><span>Born in Tikrit</span></div>
-      <div><b>1187</b><span>Hattin and Jerusalem</span></div>
-      <div><b>1193</b><span>Died in Damascus</span></div>
+<div id="blog-content">
+<div class="wrap">
+
+  <div class="hero" id="home">
+    <span class="hero-name">Azeem Akram Chaudhry</span>
+    <span class="hero-mark">c. 1137 — 1193</span>
+    <h1>Saladin</h1>
+    <p class="hero-sub">Salah al-Din Yusuf ibn Ayyub — source analysis, biography and evaluation</p>
+    <div class="hero-stamp">
+      History (HSIE) &nbsp;·&nbsp; Source Study<br>
+      Part A &nbsp;·&nbsp; Part B &nbsp;·&nbsp; Part C
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <h2 class="sh ty">The Two Sources</h2>
+    <div class="card">
+      <p><b>Primary source —</b> <i>The Rare and Excellent History of Saladin</i> by Bahāʾ al-Dīn Ibn Shaddād, a scholar and judge who knew Saladin personally.</p>
+      <p><b>Secondary source —</b> <i>The Life and Legend of the Sultan Saladin</i> by Jonathan Phillips, published by Yale University Press in 2019.</p>
+      <p>Part A analyses both sources using Origin, Purpose, Value and Limitation. Part B is the biography poster. Part C is a closer evaluation of the primary source.</p>
+    </div>
+  </section>
+
+  <!-- PART A -->
+  <section id="parta">
+    <h2 class="sh tg">Part A <em>Source Analysis</em></h2>
+
+    <div class="src yw">
+      <span class="src-lbl"><em class="pri">SOURCE 1 — PRIMARY</em> Bahāʾ al-Dīn Ibn Shaddād</span>
+      <p class="src-work">The Rare and Excellent History of Saladin</p>
+
+      <div class="opvl">
+        <h4>ORIGIN</h4>
+        <p>The source was written by Bahāʾ al-Dīn Ibn Shaddād, a Muslim scholar and judge who lived during Saladin’s lifetime. He joined Saladin’s circle after the capture of Jerusalem and remained close to him. Ibn Shaddād completed his work around 1228, using his own experiences as well as information from other people.</p>
+      </div>
+      <div class="opvl">
+        <h4>PURPOSE</h4>
+        <p>Ibn Shaddād wrote about Saladin’s life, achievements and character. He recorded important events and also described his own experiences with Saladin. The source helped preserve the memory of Saladin and the way he was viewed by people close to him.</p>
+      </div>
+      <div class="opvl v">
+        <h4>VALUE</h4>
+        <p>The source is valuable because Ibn Shaddād had direct access to Saladin and the people around him. This gives historians information about Saladin’s personality, decisions and actions that may not appear in more distant accounts. It also gives us a perspective from someone living within Saladin’s Muslim political and religious world.</p>
+      </div>
+      <div class="opvl l">
+        <h4>LIMITATION</h4>
+        <p>Ibn Shaddād clearly admired Saladin, so his account is not completely neutral. His positive view may have influenced what he chose to include and how he described Saladin. However, this does not make the source useless. It is still valuable when compared with other accounts.</p>
+      </div>
+    </div>
+
+    <div class="src gn">
+      <span class="src-lbl"><em>SOURCE 2 — SECONDARY</em> Jonathan Phillips</span>
+      <p class="src-work">The Life and Legend of the Sultan Saladin</p>
+
+      <div class="opvl">
+        <h4>ORIGIN</h4>
+        <p>This source was written by historian Jonathan Phillips and published by Yale University Press in 2019. Phillips is a historian who specialises in the Crusades. Unlike Ibn Shaddād, he did not witness Saladin’s life. Instead, he studied a wide range of surviving sources and previous historical research.</p>
+      </div>
+      <div class="opvl">
+        <h4>PURPOSE</h4>
+        <p>Phillips aimed to examine Saladin’s life and the reputation he developed during and after his lifetime. He looks at Saladin’s achievements, failures and contradictions rather than presenting him as simply a heroic figure.</p>
+      </div>
+      <div class="opvl v">
+        <h4>VALUE</h4>
+        <p>The source is valuable because Phillips compares evidence from different perspectives, including Arabic, Western and Eastern Christian sources. This allows him to identify disagreements between accounts and consider why Saladin was described differently by different groups.</p>
+      </div>
+      <div class="opvl l">
+        <h4>LIMITATION</h4>
+        <p>Phillips was writing more than 800 years after Saladin, so he could not witness the events himself. His interpretation depends on sources that may already contain bias or missing information. His work is therefore useful for understanding the evidence, but it should still be compared with primary sources.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="t-head">The two sources side by side</p>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th></th><th>Ibn Shaddād</th><th>Jonathan Phillips</th></tr></thead>
+          <tbody>
+            <tr><td>Type</td><td>Primary</td><td>Secondary</td></tr>
+            <tr><td>Written</td><td>Completed around 1228</td><td>2019, Yale University Press</td></tr>
+            <tr><td>Position</td><td>Knew Saladin personally</td><td>Historian of the Crusades</td></tr>
+            <tr><td>Strength</td><td>Direct access to Saladin</td><td>Compares many perspectives</td></tr>
+            <tr><td>Limitation</td><td>Admiration for Saladin</td><td>Writing 800 years later</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="t-head" style="margin-top:1.2rem;">Overall Judgement</p>
+      <div class="judgement">
+        <p>Both sources are useful for different reasons. Ibn Shaddād gives a close view of Saladin from his own time, while Phillips can compare many sources and perspectives. Neither source is completely neutral, but using them together gives historians a stronger and more balanced understanding of Saladin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART B -->
+  <section id="partb">
+    <h2 class="sh tb">Part B <em>Biography Poster</em></h2>
+
+    <div class="card">
+      <p class="sub-h" style="margin-top:0">Name and Background</p>
+      <p>Saladin, whose full name was Salah al-Din Yusuf ibn Ayyub, was born around 1137–1138 in Tikrit and died in 1193 in Damascus. He came from a Kurdish family and grew up at a time when Muslim rulers and the Crusader States were fighting for control of land in the Middle East.</p>
+      <p>Saladin first worked under the Muslim ruler Nur al-Din. He later went to Egypt with his uncle Shirkuh and became vizier in 1169. In 1171, he ended the Fatimid Caliphate and brought Egypt back under Sunni rule. After Nur al-Din died in 1174, Saladin took control of more land in Syria and Egypt. He eventually became the first ruler of the Ayyubid dynasty.</p>
+    </div>
+
+    <div class="card">
+      <p class="sub-h" style="margin-top:0">Achievements</p>
+      <p>Saladin became one of the most important Muslim rulers of the medieval period. One of his biggest achievements was bringing different Muslim territories together under his rule. This gave him a much stronger position against the Crusader States.</p>
+      <p>His most famous victory came at the Battle of Hattin on 4 July 1187. Saladin defeated the main army of the Kingdom of Jerusalem. This opened the way for him to take back many important towns and cities.</p>
+      <p>Later in 1187, Saladin captured Jerusalem after its defenders surrendered. Instead of destroying the city, he made an agreement that allowed many of its people to leave safely. This became an important part of the way Saladin was remembered.</p>
+    </div>
+
+    <div class="card">
+      <p class="sub-h" style="margin-top:0">Key Events</p>
+      <ul class="tl">
+        <li><b>1169</b><span>Saladin became vizier of Egypt and gained more political and military power.</span></li>
+        <li><b>1171</b><span>He ended the Fatimid Caliphate and restored Sunni rule in Egypt.</span></li>
+        <li><b>1174</b><span>After Nur al-Din died, Saladin began expanding his control into Syria.</span></li>
+        <li><b>1187</b><span>Saladin won the Battle of Hattin, defeating the main army of the Kingdom of Jerusalem.</span></li>
+        <li><b>1187</b><span>Saladin captured Jerusalem after the city surrendered.</span></li>
+        <li><b>1189–1192</b><span>During the Third Crusade, Saladin fought Crusader forces led by Richard the Lionheart.</span></li>
+        <li><b>1192</b><span>Saladin and Richard agreed to terms that left Jerusalem under Muslim control while allowing Christian pilgrims to visit the city.</span></li>
+        <li><b>1193</b><span>Saladin died in Damascus.</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="sub-h" style="margin-top:0">Impact</p>
+      <p>Saladin had a major effect on the medieval Middle East. By controlling Egypt and much of Syria, he created a stronger Muslim state that could challenge the Crusader States.</p>
+      <p>His victory at Hattin and capture of Jerusalem changed the course of the Crusades. Although the Third Crusade allowed the Crusaders to regain some coastal areas, they did not take Jerusalem back.</p>
+      <p>Saladin was also remembered long after his death. Muslim writers often praised him as a strong and fair ruler, while some Christian writers also described him with respect. Because different groups viewed him in different ways, his reputation has changed over time.</p>
+    </div>
+
+    <div class="card">
+      <p class="sub-h" style="margin-top:0">Sources</p>
+      <p>A primary source used to learn about Saladin is The Rare and Excellent History of Saladin by Bahāʾ al-Dīn Ibn Shaddād. Ibn Shaddād knew Saladin and was close to his court, so he could write about things he had seen or learned from people around Saladin. However, he admired Saladin, which could have affected the way he described him.</p>
+      <p>A secondary source is The Life and Legend of the Sultan Saladin by historian Jonathan Phillips, published in 2019. Phillips studied many different sources from the period and compared Arabic and Christian accounts. This helps historians see where different accounts agree or disagree.</p>
+    </div>
+
+    <p class="sub-h">Visuals</p>
+    <div class="vis">
+      <figure>
+        <img src="images/ayyubid-map.png" alt="Map of the land controlled by Saladin">
+        <figcaption><b>VISUAL 1 — MAP</b>The land Saladin controlled: Egypt and Syria brought together. Ayyubid dynasty, 1171–1246.</figcaption>
+      </figure>
+      <figure>
+        <div class="mini-tl">
+          <div><b>1169</b><span>Vizier of Egypt</span></div>
+          <div><b>1171</b><span>Fatimid Caliphate ended</span></div>
+          <div><b>1187</b><span>Hattin, then Jerusalem</span></div>
+          <div><b>1192</b><span>Terms agreed with Richard</span></div>
+          <div><b>1193</b><span>Died in Damascus</span></div>
+        </div>
+        <figcaption><b>VISUAL 2 — TIMELINE</b>The years 1169, 1171, 1187, 1192 and 1193 in order.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/hattin.jpg" alt="Manuscript illustration of the Battle of Hattin">
+        <figcaption><b>VISUAL 3 — HATTIN</b>The Battle of Hattin, 4 July 1187, the turning point. Manuscript of the Estoire d'Eracles.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/jerusalem-1187.jpg" alt="Manuscript illustration of the surrender of Jerusalem in 1187">
+        <figcaption><b>VISUAL 4 — JERUSALEM</b>The surrender of Jerusalem, 1187. BnF Latin 4915.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/arabic-manuscript.jpg" alt="Thirteenth-century Arabic manuscript page">
+        <figcaption><b>VISUAL 5 — PRIMARY SOURCE</b>Ibn Shaddād's account survives as a thirteenth-century Arabic manuscript.</figcaption>
+      </figure>
+      <figure>
+        <div class="bookcover">
+          <small>YALE UNIVERSITY PRESS · 2019</small>
+          <b>The Life and Legend of the Sultan Saladin</b>
+          <i>Jonathan Phillips</i>
+        </div>
+        <figcaption><b>VISUAL 6 — SECONDARY SOURCE</b>A modern history, written more than 800 years after the events.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- PART C -->
+  <section id="partc">
+    <h2 class="sh tp">Part C <em>Source Evaluation</em></h2>
+    <div class="card">
+      <p>The source I have chosen to evaluate is The Rare and Excellent History of Saladin by Bahāʾ al-Dīn Ibn Shaddād. It is a primary source because Ibn Shaddād lived during Saladin’s lifetime and knew him personally. He joined Saladin’s service in 1188 and stayed close to him and his court. This gave him the chance to see Saladin and the events around him directly, rather than learning about them hundreds of years later.</p>
+      <p>The main purpose of the source was to record the life, actions and character of Saladin. It gives information about his leadership, military campaigns and personal qualities. Because Ibn Shaddād was close to Saladin, the source can give historians details that may not be found in more distant accounts. It is especially useful for understanding how Saladin behaved and how people around him viewed him.</p>
+      <p>However, the source is not completely reliable on its own. Ibn Shaddād admired Saladin, so his writing can give a more positive view of him. This creates bias because he may have focused more on Saladin’s good qualities and achievements than on his mistakes or weaknesses. His position close to Saladin could also have affected what he was able to say. This does not mean that the source is false, but historians need to be careful about treating everything in it as completely neutral.</p>
+      <p>The source is still very valuable because it was created close to the events it describes and by someone who personally knew Saladin. It can help historians understand Saladin’s leadership, personality and reputation during his own time. It can also provide information about the political and religious world he lived in.</p>
+      <p>Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, but it should not be used by itself. His close relationship with Saladin makes the source valuable, while his admiration for him is an important limitation. Comparing it with other primary and secondary sources allows historians to check the information and build a more balanced understanding of Saladin.</p>
+    </div>
+  </section>
+
+  <!-- IMAGE CREDITS -->
+  <section id="credits">
+    <h2 class="sh tg">Image Credits</h2>
+    <div class="card">
+      <p style="font-size:.86rem;line-height:1.8;margin:0;">All images are public domain or CC0 from Wikimedia Commons: map of the Ayyubid dynasty 1171–1246; the Battle of Hattin from a manuscript of the <i>Estoire d'Eracles</i>; the surrender of Jerusalem 1187, BnF Latin 4915; and an illustrated page of the <i>Maqāmāt al-Ḥarīrī</i>, Yahyā al-Wāsiṭī, 1237. Full details are in <a href="images/CREDITS.md">images/CREDITS.md</a>.</p>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- DRAFTS -->
+<div id="version-history">
+<div class="vwrap">
+  <button class="v-back" onclick="toggleVer()">← Back to the assignment</button>
+  <div class="v-title">Drafts</div>
+  <p class="v-sub">Saladin source study — Azeem Akram Chaudhry</p>
+  <div class="v-note">Each tab shows the work at that stage, so the writing process can be followed from the first notes through to the submitted version.</div>
+
+  <div class="v-tabs">
+    <button class="v-tab final active" onclick="showVer(1)">Final ★</button>
+  </div>
+
+  <div id="ver-1" class="ver-panel show">
+    <div class="ver-meta">
+      <span class="ver-tag gold">FINAL</span>
+      <span class="ver-name">Submitted version</span>
+    </div>
+    <div class="draft">
+      <h3>Part A — Source Analysis</h3>
+      <h4>Source 1: Bahāʾ al-Dīn Ibn Shaddād — The Rare and Excellent History of Saladin (primary)</h4>
+      <p><b>Origin:</b> The source was written by Bahāʾ al-Dīn Ibn Shaddād, a Muslim scholar and judge who lived during Saladin’s lifetime. He joined Saladin’s circle after the capture of Jerusalem and remained close to him. Ibn Shaddād completed his work around 1228, using his own experiences as well as information from other people.</p>
+      <p><b>Purpose:</b> Ibn Shaddād wrote about Saladin’s life, achievements and character. He recorded important events and also described his own experiences with Saladin. The source helped preserve the memory of Saladin and the way he was viewed by people close to him.</p>
+      <p><b>Value:</b> The source is valuable because Ibn Shaddād had direct access to Saladin and the people around him. This gives historians information about Saladin’s personality, decisions and actions that may not appear in more distant accounts. It also gives us a perspective from someone living within Saladin’s Muslim political and religious world.</p>
+      <p><b>Limitation:</b> Ibn Shaddād clearly admired Saladin, so his account is not completely neutral. His positive view may have influenced what he chose to include and how he described Saladin. However, this does not make the source useless. It is still valuable when compared with other accounts.</p>
+
+      <h4>Source 2: Jonathan Phillips — The Life and Legend of the Sultan Saladin (secondary)</h4>
+      <p><b>Origin:</b> This source was written by historian Jonathan Phillips and published by Yale University Press in 2019. Phillips is a historian who specialises in the Crusades. Unlike Ibn Shaddād, he did not witness Saladin’s life. Instead, he studied a wide range of surviving sources and previous historical research.</p>
+      <p><b>Purpose:</b> Phillips aimed to examine Saladin’s life and the reputation he developed during and after his lifetime. He looks at Saladin’s achievements, failures and contradictions rather than presenting him as simply a heroic figure.</p>
+      <p><b>Value:</b> The source is valuable because Phillips compares evidence from different perspectives, including Arabic, Western and Eastern Christian sources. This allows him to identify disagreements between accounts and consider why Saladin was described differently by different groups.</p>
+      <p><b>Limitation:</b> Phillips was writing more than 800 years after Saladin, so he could not witness the events himself. His interpretation depends on sources that may already contain bias or missing information. His work is therefore useful for understanding the evidence, but it should still be compared with primary sources.</p>
+      <p><b>Overall judgement:</b> Both sources are useful for different reasons. Ibn Shaddād gives a close view of Saladin from his own time, while Phillips can compare many sources and perspectives. Neither source is completely neutral, but using them together gives historians a stronger and more balanced understanding of Saladin.</p>
+
+      <h3>Part B — Biography Poster</h3>
+      <p>Saladin, whose full name was Salah al-Din Yusuf ibn Ayyub, was born around 1137–1138 in Tikrit and died in 1193 in Damascus. He came from a Kurdish family and grew up at a time when Muslim rulers and the Crusader States were fighting for control of land in the Middle East.</p>
+      <p>His most famous victory came at the Battle of Hattin on 4 July 1187, and later in 1187 he captured Jerusalem after its defenders surrendered. The full biography, key events and visuals are on the main page.</p>
+
+      <h3>Part C — Source Evaluation</h3>
+      <p>Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, but it should not be used by itself. His close relationship with Saladin makes the source valuable, while his admiration for him is an important limitation. Comparing it with other primary and secondary sources allows historians to check the information and build a more balanced understanding of Saladin.</p>
     </div>
   </div>
 </div>
-
-<main class="wrap">
-  <section style="margin-top:3rem" class="reveal">
-    <h2 class="sh">The three parts</h2>
-    <div class="parts">
-      <a class="part" href="part-a.html">
-        <img src="images/arabic-manuscript.jpg" alt="Illustrated page from a thirteenth-century Arabic manuscript">
-        <div class="part__body">
-          <span class="part__letter">PART A</span>
-          <h3>Source Analysis</h3>
-          <p>Two sources on Saladin — one written by a man who knew him, one written 800 years later — broken down by Origin, Purpose, Value and Limitation.</p>
-          <span class="part__go">Flip the O·P·V·L cards →</span>
-        </div>
-      </a>
-      <a class="part" href="part-b.html">
-        <img src="images/saladin-portrait-painting.jpg" alt="Imagined portrait of Saladin">
-        <div class="part__body">
-          <span class="part__letter">PART B</span>
-          <h3>Biography Poster</h3>
-          <p>Background, achievements, a dated timeline from 1169 to 1193, and his impact — laid out as a poster with a fact file and a wall of period images.</p>
-          <span class="part__go">Open the poster →</span>
-        </div>
-      </a>
-      <a class="part" href="part-c.html">
-        <img src="images/saladin-tomb.jpg" alt="Photograph of Damascus showing the dome of Saladin's tomb">
-        <div class="part__body">
-          <span class="part__letter">PART C</span>
-          <h3>Source Evaluation</h3>
-          <p>A close evaluation of Ibn Shaddād's account: how useful it is, where the bias sits, and why it should be read alongside other sources.</p>
-          <span class="part__go">Read the evaluation →</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <section class="reveal">
-    <h2 class="sh">The two sources used throughout</h2>
-    <div class="parts">
-      <div class="card">
-        <span class="stamp">PRIMARY SOURCE</span>
-        <h3 style="font-family:var(--display);font-size:1.2rem">Bahāʾ al-Dīn Ibn Shaddād</h3>
-        <p class="work" style="font-style:italic;color:var(--mid)">The Rare and Excellent History of Saladin</p>
-        <p style="margin-top:.7rem">A Muslim scholar and judge who joined Saladin's circle and wrote from what he saw himself.</p>
-      </div>
-      <div class="card">
-        <span class="stamp secondary">SECONDARY SOURCE</span>
-        <h3 style="font-family:var(--display);font-size:1.2rem">Jonathan Phillips</h3>
-        <p class="work" style="font-style:italic;color:var(--mid)">The Life and Legend of the Sultan Saladin</p>
-        <p style="margin-top:.7rem">A historian of the Crusades writing in 2019, comparing Arabic, Western and Eastern Christian accounts.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="reveal">
-    <h2 class="sh">Images used on this site</h2>
-    <div class="wall">
-      <figure class="plate"><img src="images/hattin.jpg" alt="Manuscript illustration of the Battle of Hattin"><figcaption><b>The Battle of Hattin, 1187</b>Manuscript of the <i>Estoire d'Eracles</i> · public domain</figcaption></figure>
-      <figure class="plate"><img src="images/jerusalem-1187.jpg" alt="Manuscript illustration of the surrender of Jerusalem in 1187"><figcaption><b>The surrender of Jerusalem, 1187</b>BnF Latin 4915 · public domain</figcaption></figure>
-      <figure class="plate"><img src="images/ayyubid-map.png" alt="Map of the Ayyubid dynasty"><figcaption><b>Ayyubid lands, 1171–1246</b>Wikimedia Commons · public domain</figcaption></figure>
-      <figure class="plate"><img src="images/citadel-cairo.jpg" alt="Bab al-Azab, gate of the Citadel of Cairo"><figcaption><b>The Citadel of Cairo</b>Begun under Saladin · CC0</figcaption></figure>
-      <figure class="plate"><img src="images/coin.jpg" alt="Copper dirham of Saladin"><figcaption><b>Saladin's coinage</b>Copper dirham, AH 586 (1190–91) · public domain</figcaption></figure>
-      <figure class="plate"><img src="images/saladin-tomb.jpg" alt="Photograph of Damascus showing the dome of Saladin's tomb"><figcaption><b>His tomb in Damascus</b>Bonfils photograph · public domain</figcaption></figure>
-    </div>
-  </section>
-</main>
-
-<footer class="footer">
-  <div class="wrap">
-    <p>HSIE assessment — Saladin. All images are public domain or CC0 from Wikimedia Commons; full credits in <a href="images/CREDITS.md">images/CREDITS.md</a>.</p>
-  </div>
-</footer>
+</div>
 
 <div id="lb"><div><img alt=""><p></p></div></div>
-<script src="js/main.js"></script>
+
+<script>
+function goHome(){
+  const bc=document.getElementById('blog-content');
+  const vh=document.getElementById('version-history');
+  if(bc.style.display==='none'){bc.style.display='block';vh.style.display='none';}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goTo(id){
+  const bc=document.getElementById('blog-content');
+  const vh=document.getElementById('version-history');
+  if(bc.style.display==='none'){bc.style.display='block';vh.style.display='none';}
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});},50);
+}
+function toggleVer(){
+  const vh=document.getElementById('version-history');
+  const bc=document.getElementById('blog-content');
+  const open=vh.style.display!=='none'&&vh.style.display!=='';
+  if(open){vh.style.display='none';bc.style.display='block';}
+  else{vh.style.display='block';bc.style.display='none';}
+  window.scrollTo({top:0});
+}
+function showVer(n){
+  document.querySelectorAll('.ver-panel').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.v-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.v-tab')[n-1].classList.add('active');
+  document.getElementById('ver-'+n).classList.add('show');
+}
+
+// lightbox
+(function(){
+  const lb=document.getElementById('lb');
+  const img=lb.querySelector('img');
+  const cap=lb.querySelector('p');
+  document.querySelectorAll('figure img').forEach(function(el){
+    el.addEventListener('click',function(){
+      img.src=el.src;img.alt=el.alt;
+      const c=el.parentElement.querySelector('figcaption');
+      cap.textContent=c?c.textContent:el.alt;
+      lb.classList.add('open');
+    });
+  });
+  lb.addEventListener('click',()=>lb.classList.remove('open'));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open');});
+})();
+</script>
 </body>
 </html>
