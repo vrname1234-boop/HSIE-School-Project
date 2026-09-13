@@ -286,6 +286,7 @@ figure figcaption b{
 .vp-box{background:#fff;border:1px solid #e2e2dc;width:min(900px,100%);max-height:95vh;display:flex;flex-direction:column;}
 .vp-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;
   padding:.85rem 1.1rem;border-bottom:1px solid #ededea;font-size:.8rem;color:#26241f;}
+.vp-stage{margin-left:auto;margin-right:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem;color:#a8442a;letter-spacing:.02em;}
 .vp-x{font-family:inherit;font-size:.74rem;background:none;border:1px solid #e2e2dc;color:#6f6c66;padding:.3rem .7rem;cursor:pointer;}
 .vp-x:hover{border-color:#c9c6bd;color:#26241f;}
 .vp-note{padding:.6rem 1.1rem;background:#fff;position:relative;z-index:1;font-size:.72rem;color:#9a978f;border-bottom:1px solid #f2f2ef;min-height:1.2rem;}
@@ -708,6 +709,7 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
         <div class="vp-box">
           <div class="vp-head">
             <span id="vp-title">Watching v1.0 being written</span>
+        <span id="vp-stage" class="vp-stage"></span>
             <button class="vp-x" onclick="vpClose()">Close</button>
           </div>
           <div class="vp-note" id="vp-note"></div>
@@ -1298,29 +1300,32 @@ function vpPaint(doc,ci,col){
 
 /* work out what happened between one draft and the next */
 function vpPlan(n){
-  const cur=vLines(n,VSTAGE.length-1);
+  const last=VSTAGE.length-1;
+  const cur=vLines(n,last);
+  const curParts=vLineParts(n,last);
   if(n===1){
-    const items=cur.map(t=>({type:'ins',text:t,cls:'d-add'}));
+    const items=cur.map((t,i)=>({type:'ins',text:t,cls:'d-add',part:curParts[i]}));
     return {items:items,dels:[],cost:cur.join('').length};
   }
-  const prev=vLines(n-1,VSTAGE.length-1);
+  const prev=vLines(n-1,last);
+  const prevParts=vLineParts(n-1,last);
   const used=new Array(prev.length).fill(false);
   const items=[];
   let cost=0;
   cur.forEach((line,ci)=>{
-    if(!line.trim()){items.push({type:'ins',text:line,cls:''});return;}
+    if(!line.trim()){items.push({type:'ins',text:line,cls:'',part:curParts[ci]});return;}
     const mt=vMatch(line,ci,prev,used);
     const best=mt.idx, bs=mt.score;
-    if(best>=0&&prev[best]===line){used[best]=true;items.push({type:'keep',prevIdx:best,text:line});}
+    if(best>=0&&prev[best]===line){used[best]=true;items.push({type:'keep',prevIdx:best,text:line,part:curParts[ci]});}
     else if(bs>=0.4){
       used[best]=true;
       const kind=vKind(prev[best],line)==='fix'?'d-fix':'d-rew';
-      items.push({type:'edit',prevIdx:best,text:line,cls:kind});
+      items.push({type:'edit',prevIdx:best,text:line,cls:kind,part:curParts[ci]});
       cost+=Math.abs(prev[best].length-line.length)+line.length/2;
-    }else{items.push({type:'ins',text:line,cls:'d-add'});cost+=line.length;}
+    }else{items.push({type:'ins',text:line,cls:'d-add',part:curParts[ci]});cost+=line.length;}
   });
   const dels=[];
-  prev.forEach((pl,idx)=>{if(!used[idx]&&pl.trim().length>3){dels.push(idx);cost+=pl.length/2;}});
+  prev.forEach((pl,idx)=>{if(!used[idx]&&pl.trim().length>3){dels.push({idx:idx,part:prevParts[idx]});cost+=pl.length/2;}});
   return {items:items,dels:dels,cost:Math.round(cost)};
 }
 
@@ -1359,6 +1364,13 @@ function vpPrefix(a,b){let i=0;while(i<a.length&&i<b.length&&a[i]===b[i])i++;
   while(i>0&&/\S/.test(a[i-1]||'')&&/\S/.test(b[i-1]||''))i--;return i;}
 
 function vpNote(t){document.getElementById('vp-note').textContent=t;}
+/* which of the three stages the replay is sitting in right now */
+function vpStage(part){
+  const el=document.getElementById('vp-stage');
+  if(!part){el.textContent='';return;}
+  const i=VSTAGE[VSTAGE.length-1].keys.indexOf(part);
+  el.textContent='Stage '+(i+1)+' / '+VSTAGE.length+' \u00b7 '+VPART[part];
+}
 
 async function vpApply(prevDoc,plan,n){
   const doc=prevDoc.map((l,i)=>({t:l.t,cls:'',p:i}));
@@ -1367,9 +1379,10 @@ async function vpApply(prevDoc,plan,n){
   /* cut the lines that did not survive */
   if(plan.dels.length){
     vpNote('Deleting the bits that were not working.');
-    const order=plan.dels.slice().sort((a,b)=>b-a);
-    for(const pi of order){
-      const at=doc.findIndex(l=>l.p===pi);
+    const order=plan.dels.slice().sort((a,b)=>b.idx-a.idx);
+    for(const d of order){
+      vpStage(d.part);
+      const at=doc.findIndex(l=>l.p===d.idx);
       if(at<0)continue;
       doc[at].cls='d-del';
       vpPaint(doc,at,doc[at].t.length);
@@ -1391,6 +1404,7 @@ async function vpApply(prevDoc,plan,n){
     vpNote(n===1?'Typing it out for the first time.':'Adding the new section on the end.');
     for(const it of tailItems){
       if(!VP.open)return doc;
+      vpStage(it.part);
       doc.push({t:'',cls:it.cls,p:-1});
       await vpType(doc,doc.length-1,it.text,it.cls);
     }
@@ -1403,6 +1417,7 @@ async function vpApply(prevDoc,plan,n){
   let ptr=0;
   for(const it of body){
     if(!VP.open)return doc;
+    vpStage(it.part);
     if(it.type==='keep'){
       const at=doc.findIndex((l,ix)=>ix>=ptr&&l.p===it.prevIdx);
       ptr=(at<0?ptr:at)+1;
@@ -1446,6 +1461,7 @@ async function vpRun(){
   }
   if(!VP.open)return;
   document.getElementById('vp-title').textContent='Finished \u00b7 v4.0 Final, the one I handed in';
+  vpStage(null);
   vpNote('');
   document.getElementById('vp-fill').style.width='100%';
   document.getElementById('vp-pct').textContent='100%';
