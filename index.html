@@ -264,10 +264,24 @@ figure figcaption b{
 }
 .vhl:hover{border-color:#c9c6bd;color:#26241f;}
 .vhl.on{background:#2c2a25;border-color:#2c2a25;color:#fff;}
-.vlegend{display:none;gap:.8rem;font-size:.7rem;margin-bottom:1rem;}
-.d-add{background:#e4f2e4;color:#1f5130;border-bottom:1px solid #bcd9bd;}
-.d-del{background:#fbe6e2;color:#8d3220;text-decoration:line-through;}
-.d-note-line{color:#9a978f;}
+.vlegend{display:none;gap:1.1rem;flex-wrap:wrap;align-items:center;font-size:.7rem;color:#6f6c66;margin-bottom:.6rem;}
+.vlegend .lg{display:flex;align-items:center;gap:.4rem;}
+.vlegend .sw{width:.72rem;height:.72rem;display:inline-block;border:1px solid rgba(0,0,0,.12);}
+.sw-same{background:#fff;}
+.vsum{display:none;flex-wrap:wrap;align-items:center;gap:.45rem;font-size:.7rem;color:#9a978f;margin-bottom:1rem;}
+.vsum .s-dot{color:#cfccc4;margin:0 .1rem;}
+.vsum .s-add{color:#2c6b42;}
+.vsum .s-rew{color:#9a5b12;}
+.vsum .s-fix{color:#2c567f;}
+.vsum .s-cut{color:#a8442a;}
+.d-add{background:#e2f1e4;color:#1f5130;box-shadow:inset 0 -1px 0 #a9cfae;}
+.d-rew{background:#fbeed6;color:#7a4a0c;box-shadow:inset 0 -1px 0 #e0c084;}
+.d-fix{background:#e0ecf7;color:#254f75;box-shadow:inset 0 -1px 0 #a9c6e0;}
+.d-del{background:#fbe4df;color:#8d3220;text-decoration:line-through;text-decoration-color:#c96a51;}
+.d-line{display:inline-block;width:100%;border-left:3px solid rgba(0,0,0,.14);padding-left:.5rem;margin-left:-.5rem;}
+.d-arr{color:#b3afa6;padding:0 .12rem;}
+.d-cutmark{display:inline-block;width:100%;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:#a8442a;border-top:1px solid #ecd9d2;border-bottom:1px solid #ecd9d2;padding:.15rem 0;}
 </style>
 </head>
 <body>
@@ -653,9 +667,13 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
       </div>
 
       <div id="v-legend" class="vlegend">
-        <span class="d-add">added or rewritten</span>
-        <span class="d-del">removed</span>
+        <span class="lg"><i class="sw d-add"></i>New writing</span>
+        <span class="lg"><i class="sw d-rew"></i>Reworded</span>
+        <span class="lg"><i class="sw d-fix"></i>Spelling, dates and names fixed</span>
+        <span class="lg"><i class="sw d-del"></i>Cut out</span>
+        <span class="lg"><i class="sw sw-same"></i>Kept from last draft</span>
       </div>
+      <div id="v-sum" class="vsum"></div>
 
       <div class="dfile">
         <div class="dfile-h" id="v-file"></div>
@@ -999,31 +1017,86 @@ function vSim(a,b){
   let c=0;wa.forEach(w=>{if(wb.has(w))c++;});
   return c/Math.max(wa.length,wb.size);
 }
-function vWordDiff(oldL,newL){
+function vLev(a,b){
+  a=a.toLowerCase();b=b.toLowerCase();
+  if(a===b)return 0;
+  const m=a.length,n=b.length;
+  let prev=Array.from({length:n+1},(_,j)=>j),cur=new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0]=i;
+    for(let j=1;j<=n;j++)
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    [prev,cur]=[cur,prev];
+  }
+  return prev[n];
+}
+function vWords(s){return s.split(/\s+/).filter(Boolean);}
+/* decide whether a substitution is a small correction (spelling, a date, a name)
+   or a genuine rewrite of the wording */
+function vKind(oldTxt,newTxt){
+  const a=vWords(oldTxt),b=vWords(newTxt);
+  if(!a.length||!b.length)return 'rew';
+  const num=/\d/;
+  if(a.length<=2&&b.length<=2&&(num.test(oldTxt)||num.test(newTxt)))return 'fix';
+  if(a.length!==b.length)return a.length<=2&&b.length<=3?'fix':'rew';
+  let small=true;
+  for(let i=0;i<a.length;i++){
+    const d=vLev(a[i],b[i]);
+    if(d>Math.max(2,Math.floor(Math.max(a[i].length,b[i].length)*0.34))){small=false;break;}
+  }
+  return small?'fix':'rew';
+}
+function vWordDiff(oldL,newL,tally){
   const a=oldL.split(/(\s+)/),b=newL.split(/(\s+)/);
   const n=a.length,m=b.length;
   const dp=[];
   for(let i=0;i<=n;i++)dp.push(new Uint16Array(m+1));
   for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)
     dp[i][j]=a[i]===b[j]?dp[i+1][j+1]+1:Math.max(dp[i+1][j],dp[i][j+1]);
-  let i=0,j=0,out='';
-  const flush=(txt,cls)=>{if(txt)out+=cls?'<span class="'+cls+'">'+vEsc(txt)+'</span>':vEsc(txt);};
-  let del='',add='';
+  let i=0,j=0,out='',del='',add='';
+  const span=(txt,cls)=>'<span class="'+cls+'">'+vEsc(txt)+'</span>';
+  const settle=()=>{
+    if(!del&&!add)return;
+    const pre=((add.match(/^\s+/)||del.match(/^\s+/)||[''])[0]);
+    const post=((add.match(/\s+$/)||del.match(/\s+$/)||[''])[0]);
+    const d=del.trim(), ad=add.trim();
+    const bare=t=>t.toLowerCase().replace(/[^a-z0-9]/g,'');
+    out+=pre;
+    if(d&&ad){
+      if(bare(d)===bare(ad)){
+        out+=span(ad,'d-fix');tally.fix+=vWords(ad).length;
+      }else{
+        const kind=vKind(d,ad);
+        out+=span(d,'d-del')+'<span class="d-arr">\u2192</span>'+span(ad,kind==='fix'?'d-fix':'d-rew');
+        tally[kind]+=vWords(ad).length;tally.cut+=vWords(d).length;
+      }
+    }else if(ad){
+      out+=span(ad,'d-add');tally.add+=vWords(ad).length;
+    }else if(d){
+      out+=span(d,'d-del');tally.cut+=vWords(d).length;
+    }
+    out+=post;
+    del=add='';
+  };
   while(i<n&&j<m){
-    if(a[i]===b[j]){flush(del,'d-del');flush(add,'d-add');del=add='';flush(b[j]);i++;j++;}
+    if(a[i]===b[j]){settle();out+=vEsc(b[j]);i++;j++;}
     else if(dp[i+1][j]>=dp[i][j+1]){del+=a[i];i++;}
     else{add+=b[j];j++;}
   }
-  while(i<n){del+=a[i++];}
-  while(j<m){add+=b[j++];}
-  flush(del,'d-del');flush(add,'d-add');
+  while(i<n)del+=a[i++];
+  while(j<m)add+=b[j++];
+  settle();
   return out;
 }
 
 function vRenderText(n,stage,hl){
   const cur=vLines(n,stage);
-  if(!hl) return cur.map(l=>l?vEsc(l):'').join('\n');
-  if(n===1) return cur.map(l=>l?'<span class="d-add">'+vEsc(l)+'</span>':'').join('\n');
+  const tally={add:0,rew:0,fix:0,cut:0,lines:0,gone:0};
+  if(!hl)return {html:cur.map(l=>l?vEsc(l):'').join('\n'),tally:tally};
+  if(n===1){
+    cur.forEach(l=>{if(l.trim()){tally.add+=vWords(l).length;tally.lines++;}});
+    return {html:cur.map(l=>l?'<span class="d-add d-line">'+vEsc(l)+'</span>':'').join('\n'),tally:tally};
+  }
   const prev=vLines(n-1,VSTAGE.length-1);
   const used=new Array(prev.length).fill(false);
   const out=[];
@@ -1036,15 +1109,21 @@ function vRenderText(n,stage,hl){
       if(s>bs){bs=s;best=idx;}
     });
     if(bs>=0.98){used[best]=true;out.push(vEsc(line));}
-    else if(bs>=0.45){used[best]=true;out.push(vWordDiff(prev[best],line));}
-    else out.push('<span class="d-add">'+vEsc(line)+'</span>');
+    else if(bs>=0.45){used[best]=true;out.push(vWordDiff(prev[best],line,tally));}
+    else{
+      out.push('<span class="d-add d-line">'+vEsc(line)+'</span>');
+      tally.add+=vWords(line).length;tally.lines++;
+    }
   });
   const gone=prev.filter((p,idx)=>!used[idx]&&p.trim().length>3);
   if(gone.length){
-    out.push('','<span class="d-note-line">— cut from '+VMETA[n-1].tag+' —</span>');
-    gone.forEach(g=>out.push('<span class="d-del">'+vEsc(g)+'</span>'));
+    out.push('','<span class="d-cutmark">cut from '+VMETA[n-1].tag+'</span>');
+    gone.forEach(g=>{
+      out.push('<span class="d-del d-line">'+vEsc(g)+'</span>');
+      tally.cut+=vWords(g).length;tally.gone++;
+    });
   }
-  return out.join('\n');
+  return {html:out.join('\n'),tally:tally};
 }
 
 function vRender(n){
@@ -1061,9 +1140,27 @@ function vRender(n){
   const btn=document.getElementById('v-hl');
   btn.classList.toggle('on',st.hl);
   btn.textContent = st.hl ? 'Hide changes' : (n===1?'Show all as new':'Show changes vs '+VMETA[n-1].tag);
-  document.getElementById('v-legend').style.display = st.hl?'flex':'none';
   document.getElementById('v-file').textContent = 'saladin-draft-'+m.tag.replace(/\./g,'-')+'.txt';
-  document.getElementById('v-body').innerHTML = vRenderText(n,st.stage,st.hl);
+
+  const res = vRenderText(n,st.stage,st.hl);
+  document.getElementById('v-body').innerHTML = res.html;
+
+  const legend=document.getElementById('v-legend');
+  const sum=document.getElementById('v-sum');
+  legend.style.display = st.hl?'flex':'none';
+  sum.style.display = st.hl?'flex':'none';
+  if(st.hl){
+    const t=res.tally, bits=[];
+    if(t.add)bits.push('<span class="s-add">'+t.add+' words added</span>');
+    if(t.rew)bits.push('<span class="s-rew">'+t.rew+' reworded</span>');
+    if(t.fix)bits.push('<span class="s-fix">'+t.fix+' fixed</span>');
+    if(t.cut)bits.push('<span class="s-cut">'+t.cut+' cut</span>');
+    if(n===1)bits.push('<span class="s-add">'+t.lines+' new lines</span>');
+    else if(t.gone)bits.push('<span class="s-cut">'+t.gone+' lines removed</span>');
+    sum.innerHTML=(n===1?'Everything here is new, this is where the assignment started.  '
+                        :'Against '+VMETA[n-1].tag+':  ')
+                 +bits.join('<span class="s-dot">·</span>');
+  }
 }
 
 let vCur=4;
