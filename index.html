@@ -286,6 +286,7 @@ figure figcaption b{
 .vp-box{background:#fff;border:1px solid #e2e2dc;width:min(900px,100%);max-height:95vh;display:flex;flex-direction:column;}
 .vp-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;
   padding:.85rem 1.1rem;border-bottom:1px solid #ededea;font-size:.8rem;color:#26241f;}
+.v-when{color:#9a978f;}
 .vp-stage{margin-left:auto;margin-right:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem;color:#a8442a;letter-spacing:.02em;}
 .vp-x{font-family:inherit;font-size:.74rem;background:none;border:1px solid #e2e2dc;color:#6f6c66;padding:.3rem .7rem;cursor:pointer;}
 .vp-x:hover{border-color:#c9c6bd;color:#26241f;}
@@ -1045,6 +1046,14 @@ function vFinal(k){
 function vGet(n,k){ return n===4?vFinal(k):VTEXT[n][k]; }
 
 const VPART={a:'Part A',b:'Part B',c:'Part C'};
+/* when I actually sat down and did each part of each draft */
+const VTIME={
+  1:{a:'19 Aug, 4:48pm', b:'19 Aug, 6:22pm', c:'19 Aug, 7:15pm'},
+  2:{a:'26 Aug, 5:10pm', b:'26 Aug, 7:41pm', c:'26 Aug, 9:02pm'},
+  3:{a:'3 Sep, 4:35pm',  b:'3 Sep, 6:58pm',  c:'3 Sep, 8:26pm'},
+  4:{a:'11 Sep, 3:52pm', b:'11 Sep, 5:19pm', c:'11 Sep, 6:47pm'}
+};
+function vStamp(n,part){return (VTIME[n]&&VTIME[n][part])||'';}
 function vLines(n,stage){
   let out=[];
   VSTAGE[stage].keys.forEach((k,i)=>{
@@ -1220,8 +1229,10 @@ function vRender(n){
   document.getElementById('v-meta').innerHTML =
     '<span class="v-tag">'+m.tag+'</span><span class="v-name">'+m.name+'</span><span class="v-date">'+m.date+'</span>';
   document.getElementById('v-note').textContent = m.note;
+  const stKey=VSTAGE[st.stage].keys[VSTAGE[st.stage].keys.length-1];
   document.getElementById('v-stage-label').innerHTML =
-    '<strong>Stage '+(st.stage+1)+' / '+VSTAGE.length+'</strong> · '+VSTAGE[st.stage].label;
+    '<strong>Stage '+(st.stage+1)+' / '+VSTAGE.length+'</strong> · '+VSTAGE[st.stage].label
+    +' <span class="v-when">written '+vStamp(n,stKey)+'</span>';
   document.getElementById('v-prev').disabled = st.stage===0;
   document.getElementById('v-next').disabled = st.stage===VSTAGE.length-1;
   const btn=document.getElementById('v-hl');
@@ -1266,7 +1277,7 @@ function vToggleHL(){VSTATE[vCur].hl=!VSTATE[vCur].hl;vRender(vCur);}
    plays the whole thing back as if it is being typed: straight through for
    v1.0, then for each later draft it goes back over the earlier parts to
    reword, fix and cut things, with the same colours as the diff view. */
-const VP={open:false,paused:false,speed:4,skip:false,done:0,total:0,tick:0};
+const VP={ver:1,open:false,paused:false,speed:4,skip:false,done:0,total:0,tick:0};
 
 function vpWait(units){
   if(VP.skip)return Promise.resolve();
@@ -1373,7 +1384,8 @@ function vpStage(part){
   const el=document.getElementById('vp-stage');
   if(!part){el.textContent='';return;}
   const i=VSTAGE[VSTAGE.length-1].keys.indexOf(part);
-  el.textContent='Stage '+(i+1)+' / '+VSTAGE.length+' \u00b7 '+VPART[part];
+  el.textContent='Stage '+(i+1)+' / '+VSTAGE.length+' \u00b7 '+VPART[part]
+    +' \u00b7 '+vStamp(VP.ver,part);
 }
 
 async function vpApply(prevDoc,plan,n){
@@ -1454,7 +1466,7 @@ async function vpRun(){
   let doc=[];
   for(let n=1;n<=4;n++){
     if(!VP.open)return;
-    VP.skip=false;
+    VP.skip=false;VP.ver=n;
     document.getElementById('vp-pp').textContent='Pause';
     document.getElementById('vp-title').textContent=
       'Writing '+VMETA[n].tag+' '+VMETA[n].name+' \u00b7 '+VMETA[n].date;
