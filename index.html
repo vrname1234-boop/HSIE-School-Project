@@ -4,190 +4,199 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Saladin — Source Study</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#ebe3cf;--paper:#faf6ee;--ink:#2a2218;
-  --mid:#6b5d4f;--green:#14532d;--gold:#b45309;
-  --spice:#9b1c1c;--sh:rgba(42,34,24,.13);
+  --paper:#fbfaf7;--panel:#ffffff;--ink:#1d1b18;--mid:#6c665e;
+  --navy:#24384f;--rust:#a8442a;--rule:#e3ded4;--wash:#f2efe8;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{
-  background-color:var(--bg);
-  background-image:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(42,34,24,.05) 27px,rgba(42,34,24,.05) 28px);
-  font-family:'Lora',serif;color:var(--ink);min-height:100vh;
-}
+body{background:var(--paper);color:var(--ink);font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased;}
 
 /* NAV */
 nav{
-  position:sticky;top:0;z-index:100;
-  background:#d0c8b0;
-  border-bottom:2px solid rgba(42,34,24,.18);
-  padding:0 1.2rem;
-  display:flex;align-items:stretch;
-  box-shadow:0 2px 8px var(--sh);
+  position:sticky;top:0;z-index:100;background:rgba(251,250,247,.96);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:1.2rem;
+  padding:0 clamp(1rem,5vw,3rem);
 }
 .nav-brand{
-  font-family:'Caveat',cursive;font-size:1.2rem;font-weight:700;
-  color:var(--green);padding:.7rem 1rem .7rem 0;
-  margin-right:.5rem;white-space:nowrap;
-  border-right:1px solid rgba(42,34,24,.15);
-  display:flex;align-items:center;gap:.3rem;
-  background:none;border-top:none;border-bottom:none;border-left:none;
-  cursor:pointer;text-decoration:none;transition:color .15s;
+  background:none;border:none;cursor:pointer;padding:1rem 0;
+  font-family:'Newsreader',serif;font-size:1.05rem;font-weight:600;
+  letter-spacing:.02em;color:var(--ink);white-space:nowrap;
 }
-.nav-brand:hover{color:var(--gold);}
-.nav-links{display:flex;align-items:stretch;overflow-x:auto;flex:1;scrollbar-width:none;}
+.nav-brand:hover{color:var(--rust);}
+.nav-links{display:flex;gap:.2rem;overflow-x:auto;flex:1;scrollbar-width:none;}
 .nav-links::-webkit-scrollbar{display:none;}
 .nav-links a{
-  font-family:'Caveat',cursive;font-size:1rem;font-weight:600;
-  color:var(--mid);text-decoration:none;padding:.7rem .8rem;
-  border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;
+  font-family:'Inter',system-ui,sans-serif;font-size:.78rem;font-weight:500;
+  letter-spacing:.02em;color:var(--mid);text-decoration:none;
+  padding:1.05rem .75rem;white-space:nowrap;border-bottom:2px solid transparent;
 }
-.nav-links a em{font-style:normal;font-family:'Special Elite',monospace;font-size:.7rem;color:var(--gold);}
-.nav-links a:hover{color:var(--ink);border-bottom-color:var(--gold);background:rgba(255,255,255,.25);}
-.nav-right{display:flex;align-items:stretch;margin-left:auto;}
+.nav-links a em{font-style:normal;color:#a9a29a;}
+.nav-links a:hover{color:var(--ink);border-bottom-color:var(--rust);}
+.nav-right{margin-left:auto;}
 #ver-btn{
-  background:none;border:none;border-left:1px solid rgba(42,34,24,.15);
-  font-family:'Caveat',cursive;font-size:1rem;font-weight:600;
-  color:var(--mid);padding:0 1rem;cursor:pointer;transition:all .15s;white-space:nowrap;
+  background:none;border:1px solid var(--rule);cursor:pointer;
+  font-family:'Inter',system-ui,sans-serif;font-size:.74rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mid);padding:.42rem .85rem;border-radius:2px;
 }
-#ver-btn:hover{background:rgba(255,255,255,.3);color:var(--green);}
+#ver-btn:hover{border-color:var(--navy);color:var(--navy);}
 
 /* LAYOUT */
-.wrap{max-width:820px;margin:0 auto;padding:2rem 1.4rem 5rem;}
+.wrap,.vwrap{max-width:780px;margin:0 auto;padding:0 clamp(1rem,5vw,2rem) 6rem;}
 
 /* HERO */
-.hero{text-align:center;padding:3rem 1rem 2rem;}
-.hero-name{display:block;font-family:'Caveat',cursive;font-size:1.3rem;font-weight:600;color:var(--mid);letter-spacing:.04em;margin-bottom:.3rem;font-style:italic;}
-.hero-mark{font-family:'Special Elite',monospace;font-size:.8rem;letter-spacing:.3em;color:var(--gold);display:block;margin-bottom:.6rem;}
-.hero h1{font-family:'Caveat',cursive;font-size:clamp(2.1rem,6vw,3.4rem);font-weight:700;color:var(--ink);line-height:1.1;margin-bottom:.4rem;}
-.hero-sub{font-style:italic;color:var(--mid);font-size:1.05rem;margin-bottom:1.4rem;}
+.hero{padding:5rem 0 3.5rem;border-bottom:1px solid var(--rule);margin-bottom:1rem;}
+.hero-name{
+  display:block;font-family:'Inter',sans-serif;font-size:.72rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mid);margin-bottom:1.6rem;
+}
+.hero-mark{
+  display:block;font-family:'Inter',sans-serif;font-size:.72rem;letter-spacing:.16em;
+  color:var(--rust);margin-bottom:.5rem;
+}
+.hero h1{font-size:clamp(3rem,10vw,5.2rem);font-weight:400;letter-spacing:-.02em;line-height:1;margin-bottom:.9rem;}
+.hero-sub{font-size:1.18rem;color:var(--mid);max-width:34em;margin-bottom:2rem;}
 .hero-stamp{
-  display:inline-block;background:var(--paper);
-  border:1.5px dashed rgba(42,34,24,.25);padding:.5rem 1.3rem;
-  font-family:'Special Elite',monospace;font-size:.8rem;color:var(--mid);line-height:1.9;
-  transform:rotate(-.5deg);box-shadow:2px 3px 7px var(--sh);
+  display:inline-block;font-family:'Inter',sans-serif;font-size:.72rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--mid);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:.6rem 0;line-height:2;
 }
 
-/* SECTION HEADER */
+.hero{display:grid;grid-template-columns:1fr 230px;gap:3rem;align-items:end;}
+.hero-text{min-width:0;}
+.hero-fig img{width:100%;height:300px;object-fit:cover;object-position:top;border:1px solid var(--rule);cursor:zoom-in;}
+.hero-fig figcaption{font-size:.8rem;}
+@media(max-width:760px){.hero{grid-template-columns:1fr;gap:2rem;}.hero-fig img{height:240px;}}
+
+/* SECTION HEADINGS */
 .sh{
-  font-family:'Caveat',cursive;font-size:1.9rem;font-weight:700;
-  color:var(--green);margin:2.5rem 0 .9rem;padding-bottom:.3rem;
-  border-bottom:2.5px solid rgba(20,83,45,.2);position:relative;
+  font-size:2rem;font-weight:400;letter-spacing:-.01em;
+  margin:4.5rem 0 1.6rem;padding-bottom:.5rem;
+  border-bottom:1px solid var(--ink);
+  display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;
 }
-.sh em{font-style:normal;font-family:'Special Elite',monospace;font-size:.8rem;color:var(--gold);letter-spacing:.08em;}
-.sh::after{content:'';position:absolute;top:-2px;right:8px;width:54px;height:13px;transform:rotate(-3deg);opacity:.75;}
-.ty::after{background:rgba(253,224,71,.6);}
-.tg::after{background:rgba(20,83,45,.25);}
-.tp::after{background:rgba(251,182,206,.65);}
-.tb::after{background:rgba(147,197,253,.6);}
-.sub-h{font-family:'Caveat',cursive;font-size:1.5rem;font-weight:700;color:var(--ink);margin:1.6rem 0 .6rem;}
+.sh em{
+  font-style:normal;font-family:'Inter',sans-serif;font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--rust);
+}
+.sub-h{
+  font-family:'Inter',sans-serif;font-size:.76rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--navy);
+  margin:2.4rem 0 .7rem;
+}
 
-/* CARD */
-.card{background:var(--paper);padding:1.6rem 1.9rem;margin-bottom:1.2rem;box-shadow:2px 3px 10px var(--sh),-1px 1px 4px rgba(0,0,0,.04);}
-.card p{margin-bottom:.9rem;line-height:1.85;}
+/* TEXT BLOCKS */
+.card{margin-bottom:1.8rem;}
+.card p{margin-bottom:1.05rem;}
 .card p:last-child{margin-bottom:0;}
 
-/* SOURCE ENTRIES (Part A) */
-.src{background:var(--paper);padding:1.6rem 1.9rem 1.4rem;margin-bottom:2rem;position:relative;box-shadow:3px 4px 13px var(--sh),-1px 1px 5px rgba(0,0,0,.04);}
-.src:nth-of-type(odd){transform:rotate(-.35deg);}
-.src:nth-of-type(even){transform:rotate(.3deg);}
-.src::before{content:'';position:absolute;top:-7px;left:28px;width:64px;height:16px;transform:rotate(-2deg);}
-.yw::before{background:rgba(253,224,71,.55);}
-.gn::before{background:rgba(20,83,45,.22);}
-.src-lbl{font-family:'Caveat',cursive;font-size:1.65rem;font-weight:700;color:var(--ink);margin-bottom:.2rem;display:block;}
-.src-lbl em{font-style:normal;background:var(--green);color:#f4ede0;font-size:.72rem;font-family:'Special Elite',monospace;padding:.1rem .65rem;vertical-align:middle;margin-right:.45rem;letter-spacing:.07em;}
-.src-lbl em.pri{background:var(--spice);}
-.src-work{font-style:italic;color:var(--mid);margin-bottom:1rem;}
-.opvl{border-left:3px solid rgba(20,83,45,.25);padding-left:.9rem;margin-bottom:1rem;}
-.opvl:last-child{margin-bottom:0;}
-.opvl h4{font-family:'Special Elite',monospace;font-size:.8rem;letter-spacing:.14em;color:var(--green);margin-bottom:.25rem;}
-.opvl.v{border-left-color:rgba(180,83,9,.4);}
-.opvl.v h4{color:var(--gold);}
-.opvl.l{border-left-color:rgba(155,28,28,.35);}
-.opvl.l h4{color:var(--spice);}
-.opvl p{line-height:1.85;}
+/* PART A SOURCES */
+.src{border-top:1px solid var(--rule);padding:1.6rem 0 1.8rem;margin-bottom:2.4rem;}
+.src:first-of-type{border-top:none;padding-top:.4rem;}
+.src-lbl{display:block;font-size:1.55rem;line-height:1.25;margin-bottom:.15rem;}
+.src-lbl em{
+  display:block;font-style:normal;font-family:'Inter',sans-serif;
+  font-size:.68rem;letter-spacing:.16em;color:var(--navy);margin-bottom:.5rem;
+}
+.src-lbl em.pri{color:var(--rust);}
+.src-work{font-style:italic;color:var(--mid);margin-bottom:1.6rem;}
+.opvl{display:grid;grid-template-columns:120px 1fr;gap:1.4rem;padding:1rem 0;border-top:1px solid var(--rule);}
+.opvl h4{
+  font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;
+  letter-spacing:.14em;color:var(--mid);padding-top:.42rem;
+}
+.opvl.v h4{color:var(--navy);}
+.opvl.l h4{color:var(--rust);}
+.opvl p{font-size:1.02rem;}
 
-/* TABLES */
-.t-wrap{overflow-x:auto;margin:1.1rem 0;}
-table{width:100%;border-collapse:collapse;font-family:'Special Elite',monospace;font-size:.86rem;}
-th{background:var(--green);color:#f4ede0;padding:.55rem .8rem;text-align:left;font-weight:400;letter-spacing:.05em;}
-td{padding:.5rem .8rem;border-bottom:1px solid rgba(42,34,24,.1);vertical-align:top;}
-tr:nth-child(even) td{background:rgba(235,227,209,.4);}
-tr:last-child td{border-bottom:none;}
-.t-head{font-family:'Caveat',cursive;font-size:1.15rem;font-weight:600;margin-bottom:.5rem;}
-.judgement{background:rgba(20,83,45,.07);border-left:3px solid var(--green);padding:.9rem 1.1rem;margin-top:1.1rem;}
-.judgement p{margin:0;line-height:1.85;}
+/* TABLE */
+.t-wrap{overflow-x:auto;margin:.8rem 0 0;}
+table{width:100%;border-collapse:collapse;font-size:.95rem;}
+th{
+  text-align:left;font-family:'Inter',sans-serif;font-size:.68rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mid);
+  padding:.5rem .9rem .5rem 0;border-bottom:1px solid var(--ink);
+}
+td{padding:.7rem .9rem .7rem 0;border-bottom:1px solid var(--rule);vertical-align:top;}
+td:first-child{font-family:'Inter',sans-serif;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);width:8.5rem;}
+.t-head{font-family:'Inter',sans-serif;font-size:.76rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);margin:2.4rem 0 .6rem;}
+.judgement{border-left:2px solid var(--rust);padding:.2rem 0 .2rem 1.3rem;margin-top:.5rem;}
+.judgement p{margin:0;}
 
-/* TIMELINE (Part B) */
-.tl{list-style:none;margin:.4rem 0 0;}
-.tl li{display:grid;grid-template-columns:96px 1fr;gap:.8rem;padding:.55rem 0;border-bottom:1px dashed rgba(42,34,24,.15);}
-.tl li:last-child{border-bottom:none;}
-.tl b{font-family:'Special Elite',monospace;font-size:.85rem;color:var(--spice);}
-.tl span{line-height:1.8;}
+/* KEY EVENTS */
+.tl{list-style:none;}
+.tl li{display:grid;grid-template-columns:120px 1fr;gap:1.4rem;padding:.75rem 0;border-top:1px solid var(--rule);}
+.tl li:last-child{border-bottom:1px solid var(--rule);}
+.tl b{font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--rust);padding-top:.3rem;}
+.tl span{font-size:1.02rem;}
 
 /* VISUALS */
-.vis{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;margin-top:.6rem;}
-figure{background:var(--paper);padding:.7rem .7rem .1rem;box-shadow:3px 4px 13px var(--sh);position:relative;}
-figure:nth-child(3n+1){transform:rotate(-.6deg);}
-figure:nth-child(3n+2){transform:rotate(.45deg);}
-figure:nth-child(3n){transform:rotate(-.25deg);}
-figure::before{content:'';position:absolute;top:-8px;left:50%;margin-left:-32px;width:64px;height:16px;background:rgba(253,224,71,.5);transform:rotate(-2deg);}
-figure img{width:100%;height:200px;object-fit:cover;display:block;cursor:zoom-in;}
-figure figcaption{font-family:'Caveat',cursive;font-size:1.1rem;color:var(--mid);padding:.5rem .3rem .7rem;line-height:1.35;}
-figure figcaption b{display:block;font-family:'Special Elite',monospace;font-size:.72rem;color:var(--ink);letter-spacing:.04em;margin-bottom:.15rem;}
-.mini-tl{height:200px;background:rgba(235,227,209,.55);padding:1rem 1.1rem;display:grid;align-content:center;gap:.4rem;}
-.mini-tl div{display:grid;grid-template-columns:52px 1fr;gap:.5rem;align-items:baseline;}
-.mini-tl b{font-family:'Special Elite',monospace;font-size:.8rem;color:var(--spice);}
-.mini-tl span{font-size:.9rem;}
-.bookcover{height:200px;background:#14532d;color:#f4ede0;display:flex;flex-direction:column;justify-content:center;gap:.6rem;text-align:center;padding:1.2rem;border-left:8px solid #0d3d1d;}
-.bookcover small{font-family:'Special Elite',monospace;font-size:.62rem;letter-spacing:.14em;color:#e7c98a;}
-.bookcover b{font-family:'Lora',serif;font-size:1.02rem;line-height:1.4;}
-.bookcover i{font-family:'Caveat',cursive;font-size:1.25rem;font-style:normal;}
+.vis{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2rem 1.8rem;margin-top:1.4rem;}
+figure{margin:0;}
+figure img{width:100%;height:190px;object-fit:cover;display:block;cursor:zoom-in;border:1px solid var(--rule);}
+figure figcaption{font-size:.9rem;color:var(--mid);line-height:1.55;padding-top:.6rem;}
+figure figcaption b{
+  display:block;font-family:'Inter',sans-serif;font-size:.66rem;font-weight:600;
+  letter-spacing:.14em;color:var(--ink);margin-bottom:.3rem;
+}
+.mini-tl{height:190px;background:var(--wash);border:1px solid var(--rule);padding:1.1rem 1.2rem;display:grid;align-content:center;gap:.45rem;}
+.mini-tl div{display:grid;grid-template-columns:52px 1fr;gap:.6rem;align-items:baseline;}
+.mini-tl b{font-family:'Inter',sans-serif;font-size:.72rem;font-weight:600;color:var(--rust);}
+.mini-tl span{font-size:.9rem;line-height:1.4;}
+.bookcover{
+  height:190px;background:var(--navy);color:#f3efe7;border:1px solid var(--navy);
+  display:flex;flex-direction:column;justify-content:center;gap:.7rem;
+  text-align:center;padding:1.3rem;
+}
+.bookcover small{font-family:'Inter',sans-serif;font-size:.58rem;letter-spacing:.16em;color:#a8bdd4;}
+.bookcover b{font-weight:400;font-size:1.05rem;line-height:1.35;}
+.bookcover i{font-family:'Inter',sans-serif;font-style:normal;font-size:.74rem;letter-spacing:.08em;color:#cdd9e6;}
 
 /* LIGHTBOX */
-#lb{display:none;position:fixed;inset:0;background:rgba(20,15,9,.9);z-index:500;padding:2rem;cursor:zoom-out;}
+#lb{display:none;position:fixed;inset:0;background:rgba(20,18,15,.92);z-index:500;padding:2rem;cursor:zoom-out;}
 #lb.open{display:grid;place-items:center;}
-#lb img{max-width:min(1000px,92vw);max-height:82vh;object-fit:contain;box-shadow:0 18px 50px rgba(0,0,0,.6);}
-#lb p{color:#e8dcc4;font-family:'Caveat',cursive;font-size:1.2rem;text-align:center;margin-top:.7rem;}
+#lb img{max-width:min(1000px,92vw);max-height:80vh;object-fit:contain;}
+#lb p{color:#ded7cb;font-size:.9rem;text-align:center;margin-top:.9rem;max-width:46em;}
 
-/* DRAFTS / VERSION HISTORY */
+/* DRAFTS */
 #version-history{display:none;}
-.vwrap{max-width:820px;margin:0 auto;padding:2rem 1.4rem 5rem;}
-.v-back{background:none;border:none;cursor:pointer;font-family:'Caveat',cursive;font-size:1.1rem;font-weight:600;color:var(--green);text-decoration:underline;text-underline-offset:3px;margin-bottom:1.5rem;display:block;padding:0;}
-.v-title{font-family:'Caveat',cursive;font-size:2.2rem;font-weight:700;color:var(--ink);margin-bottom:.25rem;}
-.v-sub{font-style:italic;font-size:.88rem;color:var(--mid);margin-bottom:1rem;}
-.v-note{background:rgba(20,83,45,.07);border-left:3px solid var(--green);padding:.75rem 1rem;font-size:.85rem;color:var(--mid);font-style:italic;margin-bottom:1.5rem;line-height:1.6;}
-.v-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
-.v-tab{font-family:'Caveat',cursive;font-size:1.05rem;font-weight:700;padding:.4rem 1rem;border:2px solid rgba(42,34,24,.2);background:var(--paper);color:var(--mid);cursor:pointer;transition:all .15s;}
-.v-tab:hover{background:rgba(20,83,45,.1);color:var(--ink);}
-.v-tab.active{background:var(--green);color:#f4ede0;border-color:var(--green);}
-.v-tab.final{border-color:var(--gold);}
-.v-tab.final.active{background:var(--gold);border-color:var(--gold);}
+.v-back{background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:.76rem;letter-spacing:.06em;color:var(--mid);padding:2.5rem 0 2rem;}
+.v-back:hover{color:var(--rust);}
+.v-title{font-size:2.6rem;font-weight:400;margin-bottom:.3rem;}
+.v-sub{color:var(--mid);margin-bottom:1.4rem;}
+.v-note{border-left:2px solid var(--rule);padding-left:1.2rem;color:var(--mid);font-size:.95rem;margin-bottom:2rem;}
+.v-tabs{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.v-tab{
+  font-family:'Inter',sans-serif;font-size:.74rem;letter-spacing:.08em;
+  padding:.45rem 1rem;border:1px solid var(--rule);background:none;color:var(--mid);cursor:pointer;
+}
+.v-tab:hover{border-color:var(--navy);color:var(--navy);}
+.v-tab.active{background:var(--ink);border-color:var(--ink);color:#fbfaf7;}
+.v-tab.final.active{background:var(--rust);border-color:var(--rust);}
 .ver-panel{display:none;}
 .ver-panel.show{display:block;}
-.ver-meta{background:var(--paper);padding:.9rem 1.2rem;margin-bottom:1rem;box-shadow:1px 2px 6px var(--sh);display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;}
-.ver-tag{font-family:'Special Elite',monospace;font-size:.8rem;background:var(--green);color:#f4ede0;padding:.12rem .6rem;}
-.ver-tag.gold{background:var(--gold);}
-.ver-date{font-style:italic;font-size:.82rem;color:var(--mid);}
-.ver-name{font-family:'Caveat',cursive;font-size:1.1rem;font-weight:700;color:var(--ink);}
-.draft{background:var(--paper);padding:1.5rem 1.8rem;box-shadow:2px 3px 10px var(--sh);line-height:1.8;font-size:.93rem;}
-.draft h3{font-family:'Caveat',cursive;font-size:1.4rem;font-weight:700;color:var(--green);margin:1.2rem 0 .4rem;}
+.ver-meta{display:flex;gap:1rem;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--ink);padding-bottom:.7rem;margin-bottom:1.6rem;}
+.ver-tag{font-family:'Inter',sans-serif;font-size:.66rem;letter-spacing:.14em;background:var(--ink);color:#fbfaf7;padding:.18rem .6rem;}
+.ver-tag.gold{background:var(--rust);}
+.ver-date{font-size:.88rem;color:var(--mid);}
+.ver-name{font-size:1.05rem;}
+.draft{font-size:1rem;}
+.draft h3{font-size:1.35rem;font-weight:400;margin:2rem 0 .6rem;padding-bottom:.3rem;border-bottom:1px solid var(--rule);}
 .draft h3:first-child{margin-top:0;}
-.draft h4{font-family:'Caveat',cursive;font-size:1.15rem;font-weight:600;color:var(--gold);margin:.9rem 0 .3rem;}
-.draft p{margin-bottom:.75rem;}
-.draft ul{padding-left:1.3rem;margin-bottom:.75rem;color:var(--mid);font-size:.9rem;}
-.draft-note{font-style:italic;font-size:.82rem;color:var(--mid);border-left:2px solid rgba(42,34,24,.2);padding-left:.7rem;margin:.5rem 0;}
+.draft h4{font-family:'Inter',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);margin:1.4rem 0 .5rem;}
+.draft p{margin-bottom:.85rem;}
+.draft ul{padding-left:1.2rem;margin-bottom:.85rem;color:var(--mid);}
 
-@media(max-width:600px){
-  .wrap,.vwrap{padding:1.5rem 1rem 4rem;}
-  .card,.src{padding:1.2rem;}
-  nav{padding:0 .75rem;}
-  .nav-brand{font-size:1rem;}
-  table{font-size:.78rem;}
-  .tl li{grid-template-columns:1fr;gap:.1rem;}
+@media(max-width:620px){
+  body{font-size:17px;}
+  .hero{padding:3rem 0 2.5rem;}
+  .opvl,.tl li{grid-template-columns:1fr;gap:.35rem;}
+  .opvl h4{padding-top:0;}
+  .nav-brand{font-size:.95rem;}
 }
 </style>
 </head>
@@ -211,6 +220,7 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
 <div class="wrap">
 
   <div class="hero" id="home">
+    <div class="hero-text">
     <span class="hero-name">Azeem Akram Chaudhry</span>
     <span class="hero-mark">c. 1137 — 1193</span>
     <h1>Saladin</h1>
@@ -219,11 +229,16 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
       History (HSIE) &nbsp;·&nbsp; Source Study<br>
       Part A &nbsp;·&nbsp; Part B &nbsp;·&nbsp; Part C
     </div>
+    </div>
+    <figure class="hero-fig">
+      <img src="images/saladin-portrait-painting.jpg" alt="Sixteenth-century painted portrait of Saladin">
+      <figcaption><b>SALADIN</b>Painted portrait, sixteenth century, Cristofano dell’Altissimo. Public domain.</figcaption>
+    </figure>
   </div>
 
   <!-- INTRO -->
   <section id="intro">
-    <h2 class="sh ty">The Two Sources</h2>
+    <h2 class="sh">The Two Sources</h2>
     <div class="card">
       <p><b>Primary source —</b> <i>The Rare and Excellent History of Saladin</i> by Bahāʾ al-Dīn Ibn Shaddād, a scholar and judge who knew Saladin personally.</p>
       <p><b>Secondary source —</b> <i>The Life and Legend of the Sultan Saladin</i> by Jonathan Phillips, published by Yale University Press in 2019.</p>
@@ -233,9 +248,9 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
 
   <!-- PART A -->
   <section id="parta">
-    <h2 class="sh tg">Part A <em>Source Analysis</em></h2>
+    <h2 class="sh">Part A <em>Source Analysis</em></h2>
 
-    <div class="src yw">
+    <div class="src">
       <span class="src-lbl"><em class="pri">SOURCE 1 — PRIMARY</em> Bahāʾ al-Dīn Ibn Shaddād</span>
       <p class="src-work">The Rare and Excellent History of Saladin</p>
 
@@ -257,7 +272,7 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
       </div>
     </div>
 
-    <div class="src gn">
+    <div class="src">
       <span class="src-lbl"><em>SOURCE 2 — SECONDARY</em> Jonathan Phillips</span>
       <p class="src-work">The Life and Legend of the Sultan Saladin</p>
 
@@ -303,23 +318,23 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
 
   <!-- PART B -->
   <section id="partb">
-    <h2 class="sh tb">Part B <em>Biography Poster</em></h2>
+    <h2 class="sh">Part B <em>Biography Poster</em></h2>
 
     <div class="card">
-      <p class="sub-h" style="margin-top:0">Name and Background</p>
+      <p class="sub-h">Name and Background</p>
       <p>Saladin, whose full name was Salah al-Din Yusuf ibn Ayyub, was born around 1137–1138 in Tikrit and died in 1193 in Damascus. He came from a Kurdish family and grew up at a time when Muslim rulers and the Crusader States were fighting for control of land in the Middle East.</p>
       <p>Saladin first worked under the Muslim ruler Nur al-Din. He later went to Egypt with his uncle Shirkuh and became vizier in 1169. In 1171, he ended the Fatimid Caliphate and brought Egypt back under Sunni rule. After Nur al-Din died in 1174, Saladin took control of more land in Syria and Egypt. He eventually became the first ruler of the Ayyubid dynasty.</p>
     </div>
 
     <div class="card">
-      <p class="sub-h" style="margin-top:0">Achievements</p>
+      <p class="sub-h">Achievements</p>
       <p>Saladin became one of the most important Muslim rulers of the medieval period. One of his biggest achievements was bringing different Muslim territories together under his rule. This gave him a much stronger position against the Crusader States.</p>
       <p>His most famous victory came at the Battle of Hattin on 4 July 1187. Saladin defeated the main army of the Kingdom of Jerusalem. This opened the way for him to take back many important towns and cities.</p>
       <p>Later in 1187, Saladin captured Jerusalem after its defenders surrendered. Instead of destroying the city, he made an agreement that allowed many of its people to leave safely. This became an important part of the way Saladin was remembered.</p>
     </div>
 
     <div class="card">
-      <p class="sub-h" style="margin-top:0">Key Events</p>
+      <p class="sub-h">Key Events</p>
       <ul class="tl">
         <li><b>1169</b><span>Saladin became vizier of Egypt and gained more political and military power.</span></li>
         <li><b>1171</b><span>He ended the Fatimid Caliphate and restored Sunni rule in Egypt.</span></li>
@@ -333,14 +348,14 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
     </div>
 
     <div class="card">
-      <p class="sub-h" style="margin-top:0">Impact</p>
+      <p class="sub-h">Impact</p>
       <p>Saladin had a major effect on the medieval Middle East. By controlling Egypt and much of Syria, he created a stronger Muslim state that could challenge the Crusader States.</p>
       <p>His victory at Hattin and capture of Jerusalem changed the course of the Crusades. Although the Third Crusade allowed the Crusaders to regain some coastal areas, they did not take Jerusalem back.</p>
       <p>Saladin was also remembered long after his death. Muslim writers often praised him as a strong and fair ruler, while some Christian writers also described him with respect. Because different groups viewed him in different ways, his reputation has changed over time.</p>
     </div>
 
     <div class="card">
-      <p class="sub-h" style="margin-top:0">Sources</p>
+      <p class="sub-h">Sources</p>
       <p>A primary source used to learn about Saladin is The Rare and Excellent History of Saladin by Bahāʾ al-Dīn Ibn Shaddād. Ibn Shaddād knew Saladin and was close to his court, so he could write about things he had seen or learned from people around Saladin. However, he admired Saladin, which could have affected the way he described him.</p>
       <p>A secondary source is The Life and Legend of the Sultan Saladin by historian Jonathan Phillips, published in 2019. Phillips studied many different sources from the period and compared Arabic and Christian accounts. This helps historians see where different accounts agree or disagree.</p>
     </div>
@@ -386,7 +401,7 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
 
   <!-- PART C -->
   <section id="partc">
-    <h2 class="sh tp">Part C <em>Source Evaluation</em></h2>
+    <h2 class="sh">Part C <em>Source Evaluation</em></h2>
     <div class="card">
       <p>The source I have chosen to evaluate is The Rare and Excellent History of Saladin by Bahāʾ al-Dīn Ibn Shaddād. It is a primary source because Ibn Shaddād lived during Saladin’s lifetime and knew him personally. He joined Saladin’s service in 1188 and stayed close to him and his court. This gave him the chance to see Saladin and the events around him directly, rather than learning about them hundreds of years later.</p>
       <p>The main purpose of the source was to record the life, actions and character of Saladin. It gives information about his leadership, military campaigns and personal qualities. Because Ibn Shaddād was close to Saladin, the source can give historians details that may not be found in more distant accounts. It is especially useful for understanding how Saladin behaved and how people around him viewed him.</p>
@@ -398,9 +413,9 @@ figure figcaption b{display:block;font-family:'Special Elite',monospace;font-siz
 
   <!-- IMAGE CREDITS -->
   <section id="credits">
-    <h2 class="sh tg">Image Credits</h2>
+    <h2 class="sh">Image Credits</h2>
     <div class="card">
-      <p style="font-size:.86rem;line-height:1.8;margin:0;">All images are public domain or CC0 from Wikimedia Commons: map of the Ayyubid dynasty 1171–1246; the Battle of Hattin from a manuscript of the <i>Estoire d'Eracles</i>; the surrender of Jerusalem 1187, BnF Latin 4915; and an illustrated page of the <i>Maqāmāt al-Ḥarīrī</i>, Yahyā al-Wāsiṭī, 1237. Full details are in <a href="images/CREDITS.md">images/CREDITS.md</a>.</p>
+      <p style="font-size:.86rem;line-height:1.8;margin:0;">All images are public domain or CC0 from Wikimedia Commons: the painted portrait of Saladin by Cristofano dell’Altissimo; map of the Ayyubid dynasty 1171–1246; the Battle of Hattin from a manuscript of the <i>Estoire d'Eracles</i>; the surrender of Jerusalem 1187, BnF Latin 4915; and an illustrated page of the <i>Maqāmāt al-Ḥarīrī</i>, Yahyā al-Wāsiṭī, 1237. Full details are in <a href="images/CREDITS.md">images/CREDITS.md</a>.</p>
     </div>
   </section>
 
