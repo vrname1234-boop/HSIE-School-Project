@@ -1174,7 +1174,7 @@ function vRender(n){
   document.getElementById('v-next').disabled = st.stage===VSTAGE.length-1;
   const btn=document.getElementById('v-hl');
   btn.classList.toggle('on',st.hl);
-  btn.textContent = st.hl ? 'Hide changes' : (n===1?'Show all as new':'Show changes vs '+VMETA[n-1].tag);
+  btn.textContent = st.hl ? 'Hide changes' : (n===1?'Show changes':'Show changes vs '+VMETA[n-1].tag);
   document.getElementById('v-file').textContent = 'saladin-draft-'+m.tag.replace(/\./g,'-')+'.txt';
 
   const res = vRenderText(n,st.stage,st.hl);
