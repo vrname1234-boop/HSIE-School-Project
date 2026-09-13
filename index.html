@@ -1276,8 +1276,12 @@ async function vpGate(){while(VP.paused&&VP.open)await new Promise(r=>setTimeout
 
 function vpPaint(doc,ci,col){
   if(VP.skip)return;
-  let out='';
+  let out='',seen=null;
   doc.forEach((l,i)=>{
+    if(l.part&&l.part!==seen&&l.t.trim()){
+      seen=l.part;
+      out+='<span class="d-part">'+VPART[l.part]+'</span>\n';
+    }
     if(i===ci){
       const a=vEsc(l.t.slice(0,col)),b=vEsc(l.t.slice(col));
       out+=(l.cls?'<span class="'+l.cls+'">'+a+'</span>':a)+'<span class="vp-cur"> </span>'+b+'\n';
@@ -1373,7 +1377,7 @@ function vpStage(part){
 }
 
 async function vpApply(prevDoc,plan,n){
-  const doc=prevDoc.map((l,i)=>({t:l.t,cls:'',p:i}));
+  const doc=prevDoc.map((l,i)=>({t:l.t,cls:'',p:i,part:l.part}));
   if(n===1)vpNote('Typing it out for the first time.');
 
   /* cut the lines that did not survive */
@@ -1405,7 +1409,7 @@ async function vpApply(prevDoc,plan,n){
     for(const it of tailItems){
       if(!VP.open)return doc;
       vpStage(it.part);
-      doc.push({t:'',cls:it.cls,p:-1});
+      doc.push({t:'',cls:it.cls,p:-1,part:it.part});
       await vpType(doc,doc.length-1,it.text,it.cls);
     }
     if(body.some(it=>it.type!=='keep')){
@@ -1420,12 +1424,14 @@ async function vpApply(prevDoc,plan,n){
     vpStage(it.part);
     if(it.type==='keep'){
       const at=doc.findIndex((l,ix)=>ix>=ptr&&l.p===it.prevIdx);
+      if(at>=0)doc[at].part=it.part;
       ptr=(at<0?ptr:at)+1;
       continue;
     }
     if(it.type==='edit'){
       const at=doc.findIndex((l,ix)=>ix>=ptr&&l.p===it.prevIdx);
       const idx=at<0?ptr:at;
+      doc[idx].part=it.part;
       const keep=vpPrefix(doc[idx].t,it.text);
       vpPaint(doc,idx,doc[idx].t.length);
       await vpWait(10);
@@ -1434,7 +1440,7 @@ async function vpApply(prevDoc,plan,n){
       ptr=idx+1;
       continue;
     }
-    doc.splice(ptr,0,{t:'',cls:it.cls,p:-1});
+    doc.splice(ptr,0,{t:'',cls:it.cls,p:-1,part:it.part});
     await vpType(doc,ptr,it.text,it.cls);
     ptr++;
   }
