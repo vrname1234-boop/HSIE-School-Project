@@ -279,6 +279,9 @@ figure figcaption b{
 .d-fix{background:#e0ecf7;color:#254f75;box-shadow:inset 0 -1px 0 #a9c6e0;}
 .d-del{background:#fbe4df;color:#8d3220;text-decoration:line-through;text-decoration-color:#c96a51;}
 .d-line{display:inline-block;width:100%;border-left:3px solid rgba(0,0,0,.14);padding-left:.5rem;margin-left:-.5rem;}
+.d-part{display:inline-block;width:100%;margin:.4rem 0 .2rem;padding:.2rem 0;
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#9a978f;border-bottom:1px solid #ededea;}
+.d-part.fresh{color:#a8442a;border-bottom-color:#e8d3cb;}
 .d-arr{color:#b3afa6;padding:0 .12rem;}
 .d-cutmark{display:inline-block;width:100%;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
   color:#a8442a;border-top:1px solid #ecd9d2;border-bottom:1px solid #ecd9d2;padding:.15rem 0;}
@@ -999,11 +1002,21 @@ function vFinal(k){
 }
 function vGet(n,k){ return n===4?vFinal(k):VTEXT[n][k]; }
 
+const VPART={a:'Part A',b:'Part B',c:'Part C'};
 function vLines(n,stage){
   let out=[];
   VSTAGE[stage].keys.forEach((k,i)=>{
     if(i)out.push('');
     out=out.concat(vGet(n,k).split('\n'));
+  });
+  return out;
+}
+/* which part each rendered line belongs to, same indexing as vLines */
+function vLineParts(n,stage){
+  let out=[];
+  VSTAGE[stage].keys.forEach((k,i)=>{
+    if(i)out.push(k);
+    out=out.concat(vGet(n,k).split('\n').map(()=>k));
   });
   return out;
 }
@@ -1089,13 +1102,34 @@ function vWordDiff(oldL,newL,tally){
   return out;
 }
 
+/* banner above each part; the part introduced at this stage is flagged */
+function vMarkParts(out,n,stage){
+  const parts=vLineParts(n,stage);
+  const newest=VSTAGE[stage].keys[VSTAGE[stage].keys.length-1];
+  let seen=null;
+  for(let i=0;i<out.length;i++){
+    const k=parts[i];
+    if(!k||k===seen)continue;
+    seen=k;
+    const fresh=k===newest&&stage>0;
+    out[i]='<span class="d-part'+(fresh?' fresh':'')+'" id="'+(fresh?'v-fresh':'v-part-'+k)+'">'
+      +VPART[k]+(fresh?' — added at this stage':'')+'</span>\n'+out[i];
+  }
+}
+
 function vRenderText(n,stage,hl){
   const cur=vLines(n,stage);
   const tally={add:0,rew:0,fix:0,cut:0,lines:0,gone:0};
-  if(!hl)return {html:cur.map(l=>l?vEsc(l):'').join('\n'),tally:tally};
+  if(!hl){
+    const o0=cur.map(l=>l?vEsc(l):'');
+    vMarkParts(o0,n,stage);
+    return {html:o0.join('\n'),tally:tally};
+  }
   if(n===1){
     cur.forEach(l=>{if(l.trim()){tally.add+=vWords(l).length;tally.lines++;}});
-    return {html:cur.map(l=>l?'<span class="d-add d-line">'+vEsc(l)+'</span>':'').join('\n'),tally:tally};
+    const o1=cur.map(l=>l?'<span class="d-add d-line">'+vEsc(l)+'</span>':'');
+    vMarkParts(o1,n,stage);
+    return {html:o1.join('\n'),tally:tally};
   }
   const prev=vLines(n-1,VSTAGE.length-1);
   const used=new Array(prev.length).fill(false);
@@ -1115,6 +1149,7 @@ function vRenderText(n,stage,hl){
       tally.add+=vWords(line).length;tally.lines++;
     }
   });
+  vMarkParts(out,n,stage);
   const gone=prev.filter((p,idx)=>!used[idx]&&p.trim().length>3);
   if(gone.length){
     out.push('','<span class="d-cutmark">cut from '+VMETA[n-1].tag+'</span>');
@@ -1170,6 +1205,8 @@ function vStage(d){
   const ni=Math.max(0,Math.min(VSTAGE.length-1,st.stage+d));
   if(ni===st.stage)return;
   st.stage=ni;vRender(vCur);
+  const f=document.getElementById(d>0?'v-fresh':'v-part-a');
+  if(f)f.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function vToggleHL(){VSTATE[vCur].hl=!VSTATE[vCur].hl;vRender(vCur);}
 
