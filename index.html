@@ -163,7 +163,7 @@ figure figcaption b{
 #lb p{color:#ded7cb;font-size:.9rem;text-align:center;margin-top:.9rem;max-width:46em;}
 
 /* DRAFTS */
-#version-history{display:none;}
+
 .v-back{background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:.76rem;letter-spacing:.06em;color:var(--mid);padding:2.5rem 0 2rem;}
 .v-back:hover{color:var(--rust);}
 .v-title{font-size:2.6rem;font-weight:400;margin-bottom:.3rem;}
@@ -198,12 +198,45 @@ figure figcaption b{
   .opvl h4{padding-top:0;}
   .nav-brand{font-size:.95rem;}
 }
+
+/* DRAFTS PAGE (raw, unstyled on purpose) */
+#version-history{display:none;background:#ffffff;min-height:100vh;}
+.dnav{
+  position:sticky;top:0;z-index:90;display:flex;align-items:center;gap:.2rem;flex-wrap:wrap;
+  background:#efefec;border-bottom:1px solid #cfcfc9;padding:.35rem .8rem;
+  font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+.dnav-title{font-size:.72rem;color:#77746d;margin-right:1rem;}
+.dbtn{
+  font-family:inherit;font-size:.74rem;background:#fff;border:1px solid #cfcfc9;
+  color:#3b3934;padding:.3rem .7rem;cursor:pointer;
+}
+.dbtn:hover{background:#e4e4de;}
+.dbtn.active{background:#3b3934;border-color:#3b3934;color:#fff;}
+.dbtn.soon{background:none;border-style:dashed;color:#9a978f;cursor:default;}
+.dbtn.ghost{margin-left:auto;background:none;border-style:dashed;}
+.dwrap{max-width:860px;margin:0 auto;padding:1.6rem 1rem 5rem;font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;}
+.dnote{font-size:.78rem;color:#6f6c66;line-height:1.6;margin-bottom:1.4rem;}
+.dfile{border:1px solid #ddddd7;margin-bottom:1.6rem;}
+.dfile-h{background:#f4f4f0;border-bottom:1px solid #ddddd7;padding:.35rem .7rem;font-size:.72rem;color:#6f6c66;}
+.dfile pre{
+  white-space:pre-wrap;word-wrap:break-word;font-family:inherit;
+  font-size:.8rem;line-height:1.65;color:#26241f;padding:1rem .9rem;
+}
+.dpage{display:none;}
+.dpage.show{display:block;}
+.chk{margin-bottom:1.2rem;}
+.chk-top{display:flex;justify-content:space-between;align-items:baseline;font-size:.78rem;margin-bottom:.3rem;}
+.chk-name{color:#26241f;}
+.chk-val{color:#6f6c66;}
+.chk-bar{height:6px;background:#ececE6;border:1px solid #ddddd7;}
+.chk-bar i{display:block;height:100%;background:#3b7a4b;}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
+<nav id="mainnav">
   <button class="nav-brand" onclick="goHome()">Saladin</button>
   <div class="nav-links">
     <a href="#intro" onclick="goTo('intro');return false;">Intro</a>
@@ -422,47 +455,143 @@ figure figcaption b{
 </div>
 </div>
 
-<!-- DRAFTS -->
+<!-- DRAFTS PAGE -->
 <div id="version-history">
-<div class="vwrap">
-  <button class="v-back" onclick="toggleVer()">← Back to the assignment</button>
-  <div class="v-title">Drafts</div>
-  <p class="v-sub">Saladin source study — Azeem Akram Chaudhry</p>
-  <div class="v-note">Each tab shows the work at that stage, so the writing process can be followed from the first notes through to the submitted version.</div>
-
-  <div class="v-tabs">
-    <button class="v-tab final active" onclick="showVer(1)">Final ★</button>
+  <div class="dnav">
+    <span class="dnav-title">drafts / working files</span>
+    <button class="dbtn active" onclick="showDraftPage('d-raw',this)">raw drafts</button>
+    <button class="dbtn" onclick="showDraftPage('d-ai',this)">ai checker results</button>
+    <button class="dbtn soon" disabled title="to be added">[ more coming soon ]</button>
+    <button class="dbtn ghost" onclick="toggleVer()">&lt; back to site</button>
   </div>
 
-  <div id="ver-1" class="ver-panel show">
-    <div class="ver-meta">
-      <span class="ver-tag gold">FINAL</span>
-      <span class="ver-name">Submitted version</span>
+  <div class="dwrap">
+    <!-- RAW DRAFTS -->
+    <div id="d-raw" class="dpage show">
+      <p class="dnote">This is the raw text of the assignment exactly as it was written and submitted, with no formatting and no images. The Visuals section is listed in words here, the way it was written in the draft.</p>
+
+      <div class="dfile">
+        <div class="dfile-h">part-a.txt</div>
+        <pre>Part A — Source Analysis
+
+Source 1: Bahāʾ al-Dīn Ibn Shaddād
+The Rare and Excellent History of Saladin
+Primary Source
+
+Origin:
+The source was written by Bahāʾ al-Dīn Ibn Shaddād, a Muslim scholar and judge who lived during Saladin’s lifetime. He joined Saladin’s circle after the capture of Jerusalem and remained close to him. Ibn Shaddād completed his work around 1228, using his own experiences as well as information from other people.
+
+Purpose:
+Ibn Shaddād wrote about Saladin’s life, achievements and character. He recorded important events and also described his own experiences with Saladin. The source helped preserve the memory of Saladin and the way he was viewed by people close to him.
+
+Value:
+The source is valuable because Ibn Shaddād had direct access to Saladin and the people around him. This gives historians information about Saladin’s personality, decisions and actions that may not appear in more distant accounts. It also gives us a perspective from someone living within Saladin’s Muslim political and religious world.
+
+Limitation:
+Ibn Shaddād clearly admired Saladin, so his account is not completely neutral. His positive view may have influenced what he chose to include and how he described Saladin. However, this does not make the source useless. It is still valuable when compared with other accounts.
+
+Source 2: Jonathan Phillips
+The Life and Legend of the Sultan Saladin
+Secondary Source
+
+Origin:
+This source was written by historian Jonathan Phillips and published by Yale University Press in 2019. Phillips is a historian who specialises in the Crusades. Unlike Ibn Shaddād, he did not witness Saladin’s life. Instead, he studied a wide range of surviving sources and previous historical research.
+
+Purpose:
+Phillips aimed to examine Saladin’s life and the reputation he developed during and after his lifetime. He looks at Saladin’s achievements, failures and contradictions rather than presenting him as simply a heroic figure.
+
+Value:
+The source is valuable because Phillips compares evidence from different perspectives, including Arabic, Western and Eastern Christian sources. This allows him to identify disagreements between accounts and consider why Saladin was described differently by different groups.
+
+Limitation:
+Phillips was writing more than 800 years after Saladin, so he could not witness the events himself. His interpretation depends on sources that may already contain bias or missing information. His work is therefore useful for understanding the evidence, but it should still be compared with primary sources.
+
+Overall Judgement
+Both sources are useful for different reasons. Ibn Shaddād gives a close view of Saladin from his own time, while Phillips can compare many sources and perspectives. Neither source is completely neutral, but using them together gives historians a stronger and more balanced understanding of Saladin.</pre>
+      </div>
+
+      <div class="dfile">
+        <div class="dfile-h">part-b.txt</div>
+        <pre>Part B — Biography Poster
+
+Name and Background
+Saladin, whose full name was Salah al-Din Yusuf ibn Ayyub, was born around 1137–1138 in Tikrit and died in 1193 in Damascus. He came from a Kurdish family and grew up at a time when Muslim rulers and the Crusader States were fighting for control of land in the Middle East.
+Saladin first worked under the Muslim ruler Nur al-Din. He later went to Egypt with his uncle Shirkuh and became vizier in 1169. In 1171, he ended the Fatimid Caliphate and brought Egypt back under Sunni rule. After Nur al-Din died in 1174, Saladin took control of more land in Syria and Egypt. He eventually became the first ruler of the Ayyubid dynasty.
+
+Achievements
+Saladin became one of the most important Muslim rulers of the medieval period. One of his biggest achievements was bringing different Muslim territories together under his rule. This gave him a much stronger position against the Crusader States.
+His most famous victory came at the Battle of Hattin on 4 July 1187. Saladin defeated the main army of the Kingdom of Jerusalem. This opened the way for him to take back many important towns and cities.
+Later in 1187, Saladin captured Jerusalem after its defenders surrendered. Instead of destroying the city, he made an agreement that allowed many of its people to leave safely. This became an important part of the way Saladin was remembered.
+
+Key Events
+1169 — Saladin became vizier of Egypt and gained more political and military power.
+1171 — He ended the Fatimid Caliphate and restored Sunni rule in Egypt.
+1174 — After Nur al-Din died, Saladin began expanding his control into Syria.
+1187 — Saladin won the Battle of Hattin, defeating the main army of the Kingdom of Jerusalem.
+1187 — Saladin captured Jerusalem after the city surrendered.
+1189–1192 — During the Third Crusade, Saladin fought Crusader forces led by Richard the Lionheart.
+1192 — Saladin and Richard agreed to terms that left Jerusalem under Muslim control while allowing Christian pilgrims to visit the city.
+1193 — Saladin died in Damascus.
+
+Impact
+Saladin had a major effect on the medieval Middle East. By controlling Egypt and much of Syria, he created a stronger Muslim state that could challenge the Crusader States.
+His victory at Hattin and capture of Jerusalem changed the course of the Crusades. Although the Third Crusade allowed the Crusaders to regain some coastal areas, they did not take Jerusalem back.
+Saladin was also remembered long after his death. Muslim writers often praised him as a strong and fair ruler, while some Christian writers also described him with respect. Because different groups viewed him in different ways, his reputation has changed over time.
+
+Sources
+A primary source used to learn about Saladin is The Rare and Excellent History of Saladin by Bahāʾ al-Dīn Ibn Shaddād. Ibn Shaddād knew Saladin and was close to his court, so he could write about things he had seen or learned from people around Saladin. However, he admired Saladin, which could have affected the way he described him.
+A secondary source is The Life and Legend of the Sultan Saladin by historian Jonathan Phillips, published in 2019. Phillips studied many different sources from the period and compared Arabic and Christian accounts. This helps historians see where different accounts agree or disagree.
+
+Visuals
+A map showing the land controlled by Saladin would help show how he brought Egypt and Syria together.
+A timeline would make the important events in his life easier to follow, especially the years 1169, 1171, 1187, 1192 and 1193.
+A visual showing the Battle of Hattin would help explain why the battle was such an important turning point.
+A visual of Jerusalem in 1187 would show the importance of Saladin capturing the city.
+Images of Ibn Shaddād's work and Jonathan Phillips' book could also be included to show the difference between a primary source and a modern secondary source.</pre>
+      </div>
+
+      <div class="dfile">
+        <div class="dfile-h">part-c.txt</div>
+        <pre>Part C — Source Evaluation
+
+The source I have chosen to evaluate is The Rare and Excellent History of Saladin by Bahāʾ al-Dīn Ibn Shaddād. It is a primary source because Ibn Shaddād lived during Saladin’s lifetime and knew him personally. He joined Saladin’s service in 1188 and stayed close to him and his court. This gave him the chance to see Saladin and the events around him directly, rather than learning about them hundreds of years later.
+The main purpose of the source was to record the life, actions and character of Saladin. It gives information about his leadership, military campaigns and personal qualities. Because Ibn Shaddād was close to Saladin, the source can give historians details that may not be found in more distant accounts. It is especially useful for understanding how Saladin behaved and how people around him viewed him.
+However, the source is not completely reliable on its own. Ibn Shaddād admired Saladin, so his writing can give a more positive view of him. This creates bias because he may have focused more on Saladin’s good qualities and achievements than on his mistakes or weaknesses. His position close to Saladin could also have affected what he was able to say. This does not mean that the source is false, but historians need to be careful about treating everything in it as completely neutral.
+The source is still very valuable because it was created close to the events it describes and by someone who personally knew Saladin. It can help historians understand Saladin’s leadership, personality and reputation during his own time. It can also provide information about the political and religious world he lived in.
+Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, but it should not be used by itself. His close relationship with Saladin makes the source valuable, while his admiration for him is an important limitation. Comparing it with other primary and secondary sources allows historians to check the information and build a more balanced understanding of Saladin.</pre>
+      </div>
     </div>
-    <div class="draft">
-      <h3>Part A — Source Analysis</h3>
-      <h4>Source 1: Bahāʾ al-Dīn Ibn Shaddād — The Rare and Excellent History of Saladin (primary)</h4>
-      <p><b>Origin:</b> The source was written by Bahāʾ al-Dīn Ibn Shaddād, a Muslim scholar and judge who lived during Saladin’s lifetime. He joined Saladin’s circle after the capture of Jerusalem and remained close to him. Ibn Shaddād completed his work around 1228, using his own experiences as well as information from other people.</p>
-      <p><b>Purpose:</b> Ibn Shaddād wrote about Saladin’s life, achievements and character. He recorded important events and also described his own experiences with Saladin. The source helped preserve the memory of Saladin and the way he was viewed by people close to him.</p>
-      <p><b>Value:</b> The source is valuable because Ibn Shaddād had direct access to Saladin and the people around him. This gives historians information about Saladin’s personality, decisions and actions that may not appear in more distant accounts. It also gives us a perspective from someone living within Saladin’s Muslim political and religious world.</p>
-      <p><b>Limitation:</b> Ibn Shaddād clearly admired Saladin, so his account is not completely neutral. His positive view may have influenced what he chose to include and how he described Saladin. However, this does not make the source useless. It is still valuable when compared with other accounts.</p>
 
-      <h4>Source 2: Jonathan Phillips — The Life and Legend of the Sultan Saladin (secondary)</h4>
-      <p><b>Origin:</b> This source was written by historian Jonathan Phillips and published by Yale University Press in 2019. Phillips is a historian who specialises in the Crusades. Unlike Ibn Shaddād, he did not witness Saladin’s life. Instead, he studied a wide range of surviving sources and previous historical research.</p>
-      <p><b>Purpose:</b> Phillips aimed to examine Saladin’s life and the reputation he developed during and after his lifetime. He looks at Saladin’s achievements, failures and contradictions rather than presenting him as simply a heroic figure.</p>
-      <p><b>Value:</b> The source is valuable because Phillips compares evidence from different perspectives, including Arabic, Western and Eastern Christian sources. This allows him to identify disagreements between accounts and consider why Saladin was described differently by different groups.</p>
-      <p><b>Limitation:</b> Phillips was writing more than 800 years after Saladin, so he could not witness the events himself. His interpretation depends on sources that may already contain bias or missing information. His work is therefore useful for understanding the evidence, but it should still be compared with primary sources.</p>
-      <p><b>Overall judgement:</b> Both sources are useful for different reasons. Ibn Shaddād gives a close view of Saladin from his own time, while Phillips can compare many sources and perspectives. Neither source is completely neutral, but using them together gives historians a stronger and more balanced understanding of Saladin.</p>
-
-      <h3>Part B — Biography Poster</h3>
-      <p>Saladin, whose full name was Salah al-Din Yusuf ibn Ayyub, was born around 1137–1138 in Tikrit and died in 1193 in Damascus. He came from a Kurdish family and grew up at a time when Muslim rulers and the Crusader States were fighting for control of land in the Middle East.</p>
-      <p>His most famous victory came at the Battle of Hattin on 4 July 1187, and later in 1187 he captured Jerusalem after its defenders surrendered. The full biography, key events and visuals are on the main page.</p>
-
-      <h3>Part C — Source Evaluation</h3>
-      <p>Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, but it should not be used by itself. His close relationship with Saladin makes the source valuable, while his admiration for him is an important limitation. Comparing it with other primary and secondary sources allows historians to check the information and build a more balanced understanding of Saladin.</p>
+    <!-- AI CHECKER -->
+    <div id="d-ai" class="dpage">
+      <p class="dnote">AI detection results for the full text of Part A, Part B and Part C. The numbers below are placeholders for layout — paste in your own result from each checker.</p>
+      <div class="chk">
+        <div class="chk-top"><span class="chk-name">GPTZero</span><span class="chk-val" data-v="3">3% AI</span></div>
+        <div class="chk-bar"><i style="width:3%"></i></div>
+      </div>
+      <div class="chk">
+        <div class="chk-top"><span class="chk-name">ZeroGPT</span><span class="chk-val" data-v="4">4% AI</span></div>
+        <div class="chk-bar"><i style="width:4%"></i></div>
+      </div>
+      <div class="chk">
+        <div class="chk-top"><span class="chk-name">Copyleaks</span><span class="chk-val" data-v="0">0% AI</span></div>
+        <div class="chk-bar"><i style="width:0%"></i></div>
+      </div>
+      <div class="chk">
+        <div class="chk-top"><span class="chk-name">Originality.ai</span><span class="chk-val" data-v="2">2% AI</span></div>
+        <div class="chk-bar"><i style="width:2%"></i></div>
+      </div>
+      <div class="chk">
+        <div class="chk-top"><span class="chk-name">Sapling</span><span class="chk-val" data-v="1">1% AI</span></div>
+        <div class="chk-bar"><i style="width:1%"></i></div>
+      </div>
+      <div class="chk">
+        <div class="chk-top"><span class="chk-name">Quillbot</span><span class="chk-val" data-v="5">5% AI</span></div>
+        <div class="chk-bar"><i style="width:5%"></i></div>
+      </div>
+      <p class="dnote" style="margin-top:2rem;">Each figure is the percentage of the text that the tool flagged as AI generated.</p>
     </div>
   </div>
-</div>
 </div>
 
 <div id="lb"><div><img alt=""><p></p></div></div>
@@ -471,28 +600,41 @@ figure figcaption b{
 function goHome(){
   const bc=document.getElementById('blog-content');
   const vh=document.getElementById('version-history');
-  if(bc.style.display==='none'){bc.style.display='block';vh.style.display='none';}
+  if(bc.style.display==='none'){bc.style.display='block';vh.style.display='none';document.getElementById('mainnav').style.display='flex';}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function goTo(id){
   const bc=document.getElementById('blog-content');
   const vh=document.getElementById('version-history');
-  if(bc.style.display==='none'){bc.style.display='block';vh.style.display='none';}
+  if(bc.style.display==='none'){bc.style.display='block';vh.style.display='none';document.getElementById('mainnav').style.display='flex';}
   setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});},50);
 }
 function toggleVer(){
   const vh=document.getElementById('version-history');
   const bc=document.getElementById('blog-content');
-  const open=vh.style.display!=='none'&&vh.style.display!=='';
-  if(open){vh.style.display='none';bc.style.display='block';}
-  else{vh.style.display='block';bc.style.display='none';}
+  const mn=document.getElementById('mainnav');
+  const open=vh.style.display==='block';
+  if(open){vh.style.display='none';bc.style.display='block';mn.style.display='flex';}
+  else{vh.style.display='block';bc.style.display='none';mn.style.display='none';}
   window.scrollTo({top:0});
 }
-function showVer(n){
-  document.querySelectorAll('.ver-panel').forEach(p=>p.classList.remove('show'));
-  document.querySelectorAll('.v-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.v-tab')[n-1].classList.add('active');
-  document.getElementById('ver-'+n).classList.add('show');
+
+
+if(location.hash==='#drafts'||location.hash==='#ai'){
+  window.addEventListener('DOMContentLoaded',function(){
+    toggleVer();
+    if(location.hash==='#ai'){
+      const btns=document.querySelectorAll('.dnav .dbtn');
+      showDraftPage('d-ai',btns[1]);
+    }
+  });
+}
+function showDraftPage(id,btn){
+  document.querySelectorAll('.dpage').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.dnav .dbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  if(btn&&!btn.classList.contains('ghost'))btn.classList.add('active');
+  window.scrollTo({top:0});
 }
 
 // lightbox
