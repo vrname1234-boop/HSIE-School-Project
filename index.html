@@ -279,6 +279,25 @@ figure figcaption b{
 .d-fix{background:#e0ecf7;color:#254f75;box-shadow:inset 0 -1px 0 #a9c6e0;}
 .d-del{background:#fbe4df;color:#8d3220;text-decoration:line-through;text-decoration-color:#c96a51;}
 .d-line{display:inline-block;width:100%;border-left:3px solid rgba(0,0,0,.14);padding-left:.5rem;margin-left:-.5rem;}
+.vplay{margin-left:auto;}
+.vplay+.vhl{margin-left:.5rem;}
+.vp{display:none;position:fixed;inset:0;background:rgba(28,26,22,.55);z-index:600;padding:2.5vh 3vw;}
+.vp.open{display:flex;align-items:center;justify-content:center;}
+.vp-box{background:#fff;border:1px solid #e2e2dc;width:min(900px,100%);max-height:95vh;display:flex;flex-direction:column;}
+.vp-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.85rem 1.1rem;border-bottom:1px solid #ededea;font-size:.8rem;color:#26241f;}
+.vp-x{font-family:inherit;font-size:.74rem;background:none;border:1px solid #e2e2dc;color:#6f6c66;padding:.3rem .7rem;cursor:pointer;}
+.vp-x:hover{border-color:#c9c6bd;color:#26241f;}
+.vp-note{padding:.6rem 1.1rem;background:#fff;position:relative;z-index:1;font-size:.72rem;color:#9a978f;border-bottom:1px solid #f2f2ef;min-height:1.2rem;}
+.vp-doc{overflow:auto;padding:1.1rem;flex:1;background:#fcfcfa;}
+#vp-body{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.95;
+  white-space:pre-wrap;word-break:break-word;color:#3b3830;margin:0;}
+.vp-cur{display:inline-block;width:.5ch;background:#a8442a;animation:vpblink 1s steps(1) infinite;}
+@keyframes vpblink{50%{opacity:0;}}
+.vp-foot{display:flex;align-items:center;gap:.5rem;padding:.7rem 1.1rem;border-top:1px solid #ededea;flex-wrap:wrap;}
+.vp-pct{font-size:.7rem;color:#9a978f;min-width:3ch;}
+.vp-bar{flex:1;min-width:120px;height:3px;background:#ededea;}
+.vp-bar i{display:block;height:100%;width:0;background:#a8442a;}
 .d-part{display:inline-block;width:100%;margin:.4rem 0 .2rem;padding:.2rem 0;
   font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#9a978f;border-bottom:1px solid #ededea;}
 .d-part.fresh{color:#a8442a;border-bottom-color:#e8d3cb;}
@@ -666,6 +685,7 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
           <span id="v-stage-label"></span>
           <button id="v-next" class="varr" onclick="vStage(1)">&#9654;</button>
         </div>
+        <button id="v-play" class="vhl vplay" onclick="vpOpen()">Watch it being written</button>
         <button id="v-hl" class="vhl" onclick="vToggleHL()"></button>
       </div>
 
@@ -681,6 +701,26 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
       <div class="dfile">
         <div class="dfile-h" id="v-file"></div>
         <pre id="v-body"></pre>
+      </div>
+
+      <!-- TYPING REPLAY -->
+      <div id="vp" class="vp">
+        <div class="vp-box">
+          <div class="vp-head">
+            <span id="vp-title">Watching v1.0 being written</span>
+            <button class="vp-x" onclick="vpClose()">Close</button>
+          </div>
+          <div class="vp-note" id="vp-note"></div>
+          <div class="vp-doc"><pre id="vp-body"></pre></div>
+          <div class="vp-foot">
+            <button class="varr" id="vp-pp" onclick="vpToggle()">Pause</button>
+            <button class="varr" onclick="vpSpeed()"><span id="vp-speed">4x</span></button>
+            <button class="varr" onclick="vpSkip()">Skip draft</button>
+            <button class="varr" onclick="vpRestart()">Restart</button>
+            <span class="vp-pct" id="vp-pct">0%</span>
+            <div class="vp-bar"><i id="vp-fill"></i></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1024,6 +1064,20 @@ function vLineParts(n,stage){
 /* --- diff --- */
 function vEsc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function vNorm(s){return s.toLowerCase().replace(/[^a-z0-9\s]/g,'').split(/\s+/).filter(Boolean);}
+/* best surviving match for a line: word overlap, nudged by how close the two
+   lines sit in their drafts, so a heavily reworded line still counts as an edit */
+function vMatch(line,ci,prev,used){
+  let best=-1,bs=0;
+  prev.forEach((pl,idx)=>{
+    if(used[idx]||!pl.trim())return;
+    const sim=vSim(line,pl);
+    if(sim<0.15)return;
+    const near=Math.abs(idx-ci)<=4?0.18:(Math.abs(idx-ci)<=10?0.07:0);
+    const score=sim+near;
+    if(score>bs){bs=score;best=idx;}
+  });
+  return {idx:best,score:bs};
+}
 function vSim(a,b){
   const wa=vNorm(a),wb=new Set(vNorm(b));
   if(!wa.length||!wb.size)return 0;
@@ -1134,16 +1188,12 @@ function vRenderText(n,stage,hl){
   const prev=vLines(n-1,VSTAGE.length-1);
   const used=new Array(prev.length).fill(false);
   const out=[];
-  cur.forEach(line=>{
+  cur.forEach((line,ci)=>{
     if(!line.trim()){out.push('');return;}
-    let best=-1,bs=0;
-    prev.forEach((p,idx)=>{
-      if(used[idx]||!p.trim())return;
-      const s=vSim(line,p);
-      if(s>bs){bs=s;best=idx;}
-    });
-    if(bs>=0.98){used[best]=true;out.push(vEsc(line));}
-    else if(bs>=0.45){used[best]=true;out.push(vWordDiff(prev[best],line,tally));}
+    const mt=vMatch(line,ci,prev,used);
+    const best=mt.idx, bs=mt.score;
+    if(best>=0&&prev[best]===line){used[best]=true;out.push(vEsc(line));}
+    else if(bs>=0.4){used[best]=true;out.push(vWordDiff(prev[best],line,tally));}
     else{
       out.push('<span class="d-add d-line">'+vEsc(line)+'</span>');
       tally.add+=vWords(line).length;tally.lines++;
@@ -1209,6 +1259,225 @@ function vStage(d){
   if(f)f.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function vToggleHL(){VSTATE[vCur].hl=!VSTATE[vCur].hl;vRender(vCur);}
+
+/* ---------- TYPING REPLAY ----------
+   plays the whole thing back as if it is being typed: straight through for
+   v1.0, then for each later draft it goes back over the earlier parts to
+   reword, fix and cut things, with the same colours as the diff view. */
+const VP={open:false,paused:false,speed:4,skip:false,done:0,total:0,tick:0};
+
+function vpWait(units){
+  if(VP.skip)return Promise.resolve();
+  return new Promise(r=>setTimeout(r,units*(1000/(55*VP.speed))));
+}
+async function vpGate(){while(VP.paused&&VP.open)await new Promise(r=>setTimeout(r,90));}
+
+function vpPaint(doc,ci,col){
+  if(VP.skip)return;
+  let out='';
+  doc.forEach((l,i)=>{
+    if(i===ci){
+      const a=vEsc(l.t.slice(0,col)),b=vEsc(l.t.slice(col));
+      out+=(l.cls?'<span class="'+l.cls+'">'+a+'</span>':a)+'<span class="vp-cur"> </span>'+b+'\n';
+    }else{
+      out+=(l.cls&&l.t?'<span class="'+l.cls+'">'+vEsc(l.t)+'</span>':vEsc(l.t))+'\n';
+    }
+  });
+  const body=document.getElementById('vp-body');
+  body.innerHTML=out;
+  const cur=body.querySelector('.vp-cur');
+  if(cur){
+    const box=body.parentNode;
+    const y=cur.offsetTop-box.clientHeight/2;
+    if(Math.abs(box.scrollTop-y)>40)box.scrollTop=y;
+  }
+  const pct=VP.total?Math.min(100,Math.round(VP.done/VP.total*100)):0;
+  document.getElementById('vp-fill').style.width=pct+'%';
+  document.getElementById('vp-pct').textContent=pct+'%';
+}
+
+/* work out what happened between one draft and the next */
+function vpPlan(n){
+  const cur=vLines(n,VSTAGE.length-1);
+  if(n===1){
+    const items=cur.map(t=>({type:'ins',text:t,cls:'d-add'}));
+    return {items:items,dels:[],cost:cur.join('').length};
+  }
+  const prev=vLines(n-1,VSTAGE.length-1);
+  const used=new Array(prev.length).fill(false);
+  const items=[];
+  let cost=0;
+  cur.forEach((line,ci)=>{
+    if(!line.trim()){items.push({type:'ins',text:line,cls:''});return;}
+    const mt=vMatch(line,ci,prev,used);
+    const best=mt.idx, bs=mt.score;
+    if(best>=0&&prev[best]===line){used[best]=true;items.push({type:'keep',prevIdx:best,text:line});}
+    else if(bs>=0.4){
+      used[best]=true;
+      const kind=vKind(prev[best],line)==='fix'?'d-fix':'d-rew';
+      items.push({type:'edit',prevIdx:best,text:line,cls:kind});
+      cost+=Math.abs(prev[best].length-line.length)+line.length/2;
+    }else{items.push({type:'ins',text:line,cls:'d-add'});cost+=line.length;}
+  });
+  const dels=[];
+  prev.forEach((pl,idx)=>{if(!used[idx]&&pl.trim().length>3){dels.push(idx);cost+=pl.length/2;}});
+  return {items:items,dels:dels,cost:Math.round(cost)};
+}
+
+const VP_KEYS='etaoinshrdlucmfwypvbgkjqxz';
+async function vpType(doc,i,text,cls){
+  const line=doc[i];
+  line.cls=cls;
+  const from=line.t.length;
+  for(let c=from;c<text.length;c++){
+    if(!VP.open)return;
+    await vpGate();
+    if(!VP.skip&&text[c]!==' '&&Math.random()<0.015){
+      const wrong=VP_KEYS[Math.floor(Math.random()*VP_KEYS.length)];
+      line.t=text.slice(0,c)+wrong;vpPaint(doc,i,line.t.length);
+      await vpWait(5);
+      line.t=text.slice(0,c);vpPaint(doc,i,line.t.length);
+      await vpWait(3);
+    }
+    line.t=text.slice(0,c+1);
+    VP.done++;
+    if(++VP.tick%2===0||c===text.length-1){vpPaint(doc,i,line.t.length);await vpWait(1);}
+  }
+  line.t=text;
+}
+async function vpBack(doc,i,toLen){
+  const line=doc[i];
+  while(line.t.length>toLen){
+    if(!VP.open)return;
+    await vpGate();
+    line.t=line.t.slice(0,-1);
+    VP.done++;
+    if(++VP.tick%3===0||line.t.length===toLen){vpPaint(doc,i,line.t.length);await vpWait(.6);}
+  }
+}
+function vpPrefix(a,b){let i=0;while(i<a.length&&i<b.length&&a[i]===b[i])i++;
+  while(i>0&&/\S/.test(a[i-1]||'')&&/\S/.test(b[i-1]||''))i--;return i;}
+
+function vpNote(t){document.getElementById('vp-note').textContent=t;}
+
+async function vpApply(prevDoc,plan,n){
+  const doc=prevDoc.map((l,i)=>({t:l.t,cls:'',p:i}));
+  if(n===1)vpNote('Typing it out for the first time.');
+
+  /* cut the lines that did not survive */
+  if(plan.dels.length){
+    vpNote('Deleting the bits that were not working.');
+    const order=plan.dels.slice().sort((a,b)=>b-a);
+    for(const pi of order){
+      const at=doc.findIndex(l=>l.p===pi);
+      if(at<0)continue;
+      doc[at].cls='d-del';
+      vpPaint(doc,at,doc[at].t.length);
+      await vpWait(18);
+      await vpBack(doc,at,0);
+      if(!VP.open)return doc;
+      doc.splice(at,1);
+      vpPaint(doc,Math.min(at,doc.length-1),0);
+    }
+  }
+
+  /* anything appended at the end gets written first, then I go back up */
+  let tail=plan.items.length;
+  while(tail>0&&plan.items[tail-1].type==='ins')tail--;
+  const tailItems=(plan.items.length-tail>=3)?plan.items.slice(tail):[];
+  const body=tailItems.length?plan.items.slice(0,tail):plan.items;
+
+  if(tailItems.length){
+    vpNote(n===1?'Typing it out for the first time.':'Adding the new section on the end.');
+    for(const it of tailItems){
+      if(!VP.open)return doc;
+      doc.push({t:'',cls:it.cls,p:-1});
+      await vpType(doc,doc.length-1,it.text,it.cls);
+    }
+    if(body.some(it=>it.type!=='keep')){
+      vpNote('Going back over what I already wrote.');
+      await vpWait(35);
+    }
+  }
+
+  let ptr=0;
+  for(const it of body){
+    if(!VP.open)return doc;
+    if(it.type==='keep'){
+      const at=doc.findIndex((l,ix)=>ix>=ptr&&l.p===it.prevIdx);
+      ptr=(at<0?ptr:at)+1;
+      continue;
+    }
+    if(it.type==='edit'){
+      const at=doc.findIndex((l,ix)=>ix>=ptr&&l.p===it.prevIdx);
+      const idx=at<0?ptr:at;
+      const keep=vpPrefix(doc[idx].t,it.text);
+      vpPaint(doc,idx,doc[idx].t.length);
+      await vpWait(10);
+      await vpBack(doc,idx,keep);
+      await vpType(doc,idx,it.text,it.cls);
+      ptr=idx+1;
+      continue;
+    }
+    doc.splice(ptr,0,{t:'',cls:it.cls,p:-1});
+    await vpType(doc,ptr,it.text,it.cls);
+    ptr++;
+  }
+  return doc;
+}
+
+async function vpRun(){
+  VP.done=0;VP.skip=false;VP.paused=false;
+  const plans=[1,2,3,4].map(vpPlan);
+  VP.total=plans.reduce((a,pl)=>a+pl.cost,0);
+  let doc=[];
+  for(let n=1;n<=4;n++){
+    if(!VP.open)return;
+    VP.skip=false;
+    document.getElementById('vp-pp').textContent='Pause';
+    document.getElementById('vp-title').textContent=
+      'Writing '+VMETA[n].tag+' '+VMETA[n].name+' \u00b7 '+VMETA[n].date;
+    doc=await vpApply(doc,plans[n-1],n);
+    if(!VP.open)return;
+    VP.skip=false;
+    vpPaint(doc,-1,0);
+    vpNote(VMETA[n].note);
+    await new Promise(r=>setTimeout(r,1400));
+  }
+  if(!VP.open)return;
+  document.getElementById('vp-title').textContent='Finished \u00b7 v4.0 Final, the one I handed in';
+  vpNote('');
+  document.getElementById('vp-fill').style.width='100%';
+  document.getElementById('vp-pct').textContent='100%';
+}
+
+function vpOpen(){
+  const panel=document.getElementById('vp');
+  panel.classList.add('open');
+  VP.open=true;
+  document.getElementById('vp-pp').disabled=false;
+  document.getElementById('vp-body').innerHTML='';
+  document.body.style.overflow='hidden';
+  vpRun();
+}
+function vpClose(){
+  VP.open=false;VP.paused=false;VP.skip=false;
+  document.getElementById('vp').classList.remove('open');
+  document.body.style.overflow='';
+}
+function vpToggle(){
+  VP.paused=!VP.paused;
+  document.getElementById('vp-pp').textContent=VP.paused?'Play':'Pause';
+}
+function vpSpeed(){
+  const steps=[1,2,4,8,16];
+  VP.speed=steps[(steps.indexOf(VP.speed)+1)%steps.length];
+  document.getElementById('vp-speed').textContent=VP.speed+'x';
+}
+function vpSkip(){VP.skip=true;}
+function vpRestart(){VP.open=false;setTimeout(()=>{vpOpen();},120);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&VP.open)vpClose();});
+
 
 
 function showDraftPage(id,btn){
