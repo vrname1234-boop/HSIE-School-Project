@@ -765,7 +765,7 @@ if(location.hash==='#drafts'||location.hash==='#ai'||location.hash==='#versions'
 }
 /* VERSION HISTORY DATA */
 const VMETA = {
-  1:{tag:'v1.0', name:'First Notes',   date:'19 August 2026' ,  note:'This is just me getting the facts down before I forgot them. Dot points, half sentences, a few names spelt wrong. I only had Part A roughed out at this point.'},
+  1:{tag:'v1.0', name:'First Notes',   date:'20 August 2026' ,  note:'This is just me getting the facts down before I forgot them. Dot points, half sentences, a few names spelt wrong. I only had Part A roughed out at this point.'},
   2:{tag:'v2.0', name:'Taking Shape',  date:'26 August 2026' ,  note:'I turned the notes into proper paragraphs and split Part A into Origin, Purpose, Value and Limitation like the criteria asks. It still reads pretty blunt here and Part C is only a few lines.'},
   3:{tag:'v3.0', name:'Almost There',  date:'3 September 2026',  note:'Nearly there. I went back and fixed the dates I had wrong, wrote out the Visuals list for the poster, and rewrote the judgement paragraphs so they actually answer the question instead of just describing the sources.'},
   4:{tag:'v4.0', name:'Final',         date:'11 September 2026', note:'This is the one I handed in. I tightened the wording, used full names and book titles properly, and made sure every section was finished.'}
@@ -1048,10 +1048,10 @@ function vGet(n,k){ return n===4?vFinal(k):VTEXT[n][k]; }
 const VPART={a:'Part A',b:'Part B',c:'Part C'};
 /* when I actually sat down and did each part of each draft */
 const VTIME={
-  1:{a:'19 Aug, 4:48pm', b:'19 Aug, 6:22pm', c:'19 Aug, 7:15pm'},
-  2:{a:'26 Aug, 5:10pm', b:'26 Aug, 7:41pm', c:'26 Aug, 9:02pm'},
-  3:{a:'3 Sep, 4:35pm',  b:'3 Sep, 6:58pm',  c:'3 Sep, 8:26pm'},
-  4:{a:'11 Sep, 3:52pm', b:'11 Sep, 5:19pm', c:'11 Sep, 6:47pm'}
+  1:{a:'18 Aug', b:'19 Aug', c:'20 Aug'},
+  2:{a:'24 Aug', b:'25 Aug', c:'26 Aug'},
+  3:{a:'1 Sep',  b:'2 Sep',  c:'3 Sep'},
+  4:{a:'9 Sep',  b:'10 Sep', c:'11 Sep'}
 };
 function vStamp(n,part){return (VTIME[n]&&VTIME[n][part])||'';}
 function vLines(n,stage){
