@@ -238,19 +238,40 @@ figure figcaption b{
 .chk-bar i{display:block;height:100%;background:#3b7a4b;}
 
 /* VERSION HISTORY */
+.vwrap{display:flex;gap:2.4rem;align-items:flex-start;}
+.vrail{flex:0 0 14.5rem;display:flex;flex-direction:column;gap:.3rem;
+  border-right:1px solid #ededea;padding-right:1.4rem;}
+.vrail-h{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#9a978f;margin-bottom:.5rem;}
+.vrail-note{font-size:.66rem;color:#9a978f;line-height:1.6;margin-top:.5rem;}
+.vplay{margin-top:1.4rem;font-family:inherit;font-size:.72rem;text-align:left;
+  background:#fff;border:1px solid #d9d6ce;color:#26241f;padding:.55rem .7rem;cursor:pointer;}
+.vplay:hover{border-color:#a8442a;color:#a8442a;}
+.vmain{flex:1;min-width:0;}
+@media(max-width:820px){
+  .vwrap{flex-direction:column;}
+  .vrail{flex:1 1 auto;width:100%;border-right:none;border-bottom:1px solid #ededea;
+    padding-right:0;padding-bottom:1.2rem;margin-bottom:1.4rem;}
+}
 .vtabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.6rem;}
 .vtab{
-  font-family:inherit;font-size:.76rem;background:#fff;border:1px solid #e2e2dc;
-  color:#6f6c66;padding:.45rem .85rem;cursor:pointer;
+  display:flex;align-items:baseline;gap:.5rem;text-align:left;width:100%;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;
+  background:none;border:none;border-left:2px solid transparent;
+  color:#6f6c66;padding:.45rem .6rem;cursor:pointer;
 }
-.vtab:hover{border-color:#c9c6bd;color:#26241f;}
-.vtab.on{background:#2c2a25;border-color:#2c2a25;color:#fff;}
+.vtab b{font-weight:500;color:#26241f;}
+.vtab span{flex:1;white-space:nowrap;}
+.vtab i{font-style:normal;font-size:.66rem;color:#b5b2aa;}
+.vtab:hover{background:#f6f5f1;color:#26241f;}
+.vtab.on{background:#f4f2ed;border-left-color:#a8442a;color:#26241f;}
+.vtab.on b{color:#a8442a;}
 .v-meta{display:flex;align-items:baseline;gap:.9rem;flex-wrap:wrap;font-size:.78rem;margin-bottom:.5rem;}
 .v-meta .v-tag{color:#a8442a;}
 .v-meta .v-name{color:#26241f;}
 .v-meta .v-date{color:#9a978f;}
 .v-note{font-size:.78rem;color:#6f6c66;line-height:1.75;max-width:78ch;margin-bottom:1.4rem;}
 .vbar{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;margin-bottom:1rem;}
+.vbar .vhl{margin-left:auto;}
 .vstage{display:flex;align-items:center;gap:.7rem;font-size:.74rem;color:#6f6c66;}
 .varr{
   font-family:inherit;font-size:.7rem;background:#fff;border:1px solid #e2e2dc;
@@ -279,8 +300,6 @@ figure figcaption b{
 .d-fix{background:#e0ecf7;color:#254f75;box-shadow:inset 0 -1px 0 #a9c6e0;}
 .d-del{background:#fbe4df;color:#8d3220;text-decoration:line-through;text-decoration-color:#c96a51;}
 .d-line{display:inline-block;width:100%;border-left:3px solid rgba(0,0,0,.14);padding-left:.5rem;margin-left:-.5rem;}
-.vplay{margin-left:auto;}
-.vplay+.vhl{margin-left:.5rem;}
 .vp{display:none;position:fixed;inset:0;background:rgba(28,26,22,.55);z-index:600;padding:2.5vh 3vw;}
 .vp.open{display:flex;align-items:center;justify-content:center;}
 .vp-box{background:#fff;border:1px solid #e2e2dc;width:min(900px,100%);max-height:95vh;display:flex;flex-direction:column;}
@@ -669,40 +688,46 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
 
     <!-- VERSION HISTORY -->
     <div id="d-ver" class="dpage">
-      <p class="dnote">Here is every draft I saved while writing this, from the first page of notes to the one I handed in. If you click the highlighting button you can see what I added, what I reworded and what I ended up cutting each time.</p>
+      <p class="dnote">Here is every draft I saved while writing this, from the first page of notes to the one I handed in. Pick a draft on the left, step through it part by part, and turn the highlighting on to see what I added, reworded or cut.</p>
 
-      <div class="vtabs">
-        <button class="vtab" onclick="vShow(1)">v1.0 First Notes</button>
-        <button class="vtab" onclick="vShow(2)">v2.0 Taking Shape</button>
-        <button class="vtab" onclick="vShow(3)">v3.0 Almost There</button>
-        <button class="vtab on" onclick="vShow(4)">v4.0 Final</button>
-      </div>
-
-      <div id="v-meta" class="v-meta"></div>
-      <p id="v-note" class="v-note"></p>
-
-      <div class="vbar">
-        <div class="vstage">
-          <button id="v-prev" class="varr" onclick="vStage(-1)">&#9664;</button>
-          <span id="v-stage-label"></span>
-          <button id="v-next" class="varr" onclick="vStage(1)">&#9654;</button>
+      <div class="vwrap">
+        <div class="vrail">
+          <span class="vrail-h">Drafts</span>
+          <button class="vtab" onclick="vShow(1)"><b>v1.0</b><span>First Notes</span><i>20 Aug</i></button>
+          <button class="vtab" onclick="vShow(2)"><b>v2.0</b><span>Taking Shape</span><i>26 Aug</i></button>
+          <button class="vtab" onclick="vShow(3)"><b>v3.0</b><span>Almost There</span><i>3 Sep</i></button>
+          <button class="vtab on" onclick="vShow(4)"><b>v4.0</b><span>Final</span><i>11 Sep</i></button>
+          <button class="vplay" onclick="vpOpen()">&#9654; Watch it being written</button>
+          <span class="vrail-note">Types all four drafts out from scratch, backspaces and all.</span>
         </div>
-        <button id="v-play" class="vhl vplay" onclick="vpOpen()">Watch it being written</button>
-        <button id="v-hl" class="vhl" onclick="vToggleHL()"></button>
-      </div>
 
-      <div id="v-legend" class="vlegend">
-        <span class="lg"><i class="sw d-add"></i>New writing</span>
-        <span class="lg"><i class="sw d-rew"></i>Reworded</span>
-        <span class="lg"><i class="sw d-fix"></i>Spelling, dates and names fixed</span>
-        <span class="lg"><i class="sw d-del"></i>Cut out</span>
-        <span class="lg"><i class="sw sw-same"></i>Kept from last draft</span>
-      </div>
-      <div id="v-sum" class="vsum"></div>
+        <div class="vmain">
+          <div id="v-meta" class="v-meta"></div>
+          <p id="v-note" class="v-note"></p>
 
-      <div class="dfile">
-        <div class="dfile-h" id="v-file"></div>
-        <pre id="v-body"></pre>
+          <div class="vbar">
+            <div class="vstage">
+              <button id="v-prev" class="varr" onclick="vStage(-1)">&#9664;</button>
+              <span id="v-stage-label"></span>
+              <button id="v-next" class="varr" onclick="vStage(1)">&#9654;</button>
+            </div>
+            <button id="v-hl" class="vhl" onclick="vToggleHL()"></button>
+          </div>
+
+          <div id="v-legend" class="vlegend">
+            <span class="lg"><i class="sw d-add"></i>New writing</span>
+            <span class="lg"><i class="sw d-rew"></i>Reworded</span>
+            <span class="lg"><i class="sw d-fix"></i>Spelling, dates and names fixed</span>
+            <span class="lg"><i class="sw d-del"></i>Cut out</span>
+            <span class="lg"><i class="sw sw-same"></i>Kept from last draft</span>
+          </div>
+          <div id="v-sum" class="vsum"></div>
+
+          <div class="dfile">
+            <div class="dfile-h" id="v-file"></div>
+            <pre id="v-body"></pre>
+          </div>
+        </div>
       </div>
 
       <!-- TYPING REPLAY -->
@@ -1036,7 +1061,7 @@ const VSTATE = {1:{stage:2,hl:false},2:{stage:2,hl:false},3:{stage:2,hl:false},4
 const VSTAGE = [
   {label:'Part A written',       keys:['a']},
   {label:'Part B added',         keys:['a','b']},
-  {label:'Part C added — complete', keys:['a','b','c']}
+  {label:'Part C added', keys:['a','b','c']}
 ];
 
 function vFinal(k){
@@ -1231,8 +1256,8 @@ function vRender(n){
   document.getElementById('v-note').textContent = m.note;
   const stKey=VSTAGE[st.stage].keys[VSTAGE[st.stage].keys.length-1];
   document.getElementById('v-stage-label').innerHTML =
-    '<strong>Stage '+(st.stage+1)+' / '+VSTAGE.length+'</strong> · '+VSTAGE[st.stage].label
-    +' <span class="v-when">written '+vStamp(n,stKey)+'</span>';
+    '<strong>Stage '+(st.stage+1)+' of '+VSTAGE.length+'</strong> · '+VSTAGE[st.stage].label
+    +' <span class="v-when">'+vStamp(n,stKey)+'</span>';
   document.getElementById('v-prev').disabled = st.stage===0;
   document.getElementById('v-next').disabled = st.stage===VSTAGE.length-1;
   const btn=document.getElementById('v-hl');
@@ -1249,12 +1274,12 @@ function vRender(n){
   sum.style.display = st.hl?'flex':'none';
   if(st.hl){
     const t=res.tally, bits=[];
-    if(t.add)bits.push('<span class="s-add">'+t.add+' words added</span>');
+    if(t.add)bits.push('<span class="s-add">'+t.add+(t.add===1?' word added':' words added')+'</span>');
     if(t.rew)bits.push('<span class="s-rew">'+t.rew+' reworded</span>');
     if(t.fix)bits.push('<span class="s-fix">'+t.fix+' fixed</span>');
     if(t.cut)bits.push('<span class="s-cut">'+t.cut+' cut</span>');
-    if(n===1)bits.push('<span class="s-add">'+t.lines+' new lines</span>');
-    else if(t.gone)bits.push('<span class="s-cut">'+t.gone+' lines removed</span>');
+    if(n===1)bits.push('<span class="s-add">'+t.lines+(t.lines===1?' new line':' new lines')+'</span>');
+    else if(t.gone)bits.push('<span class="s-cut">'+t.gone+(t.gone===1?' line removed':' lines removed')+'</span>');
     sum.innerHTML=(n===1?'Everything here is new, this is where the assignment started.  '
                         :'Against '+VMETA[n-1].tag+':  ')
                  +bits.join('<span class="s-dot">·</span>');
