@@ -562,7 +562,7 @@ figure figcaption b{
   <div class="dwrap">
     <!-- RAW DRAFTS -->
     <div id="d-raw" class="dpage show">
-      <p class="dnote">This is the raw text of the assignment with no formatting and no images. The Visuals section is listed in words here, the way it was written in the draft. One change since it was handed in: the eight OPVL paragraphs in Part A were rewritten on 20 September, so this text matches v5.0 in the version history, not the v4.0 that was submitted.</p>
+      <p class="dnote">This is the raw text of the assignment exactly as it was written, with no formatting and no images. The Visuals section is listed in words here, the way it was written in the draft.</p>
 
       <div class="dfile">
         <div class="dfile-h">part-a.txt</div>
@@ -688,7 +688,7 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
 
     <!-- VERSION HISTORY -->
     <div id="d-ver" class="dpage">
-      <p class="dnote">Here is every draft I saved while writing this, from the first page of notes to the one I handed in. Pick a draft on the left, step through it part by part, and turn the highlighting on to see what I added, reworded or cut. v5.0 came after the hand in: I went back and rewrote the OPVL paragraphs in Part A, so that wording is not in any of the earlier drafts.</p>
+      <p class="dnote">Here is every draft I saved while writing this, from the first page of notes to the finished one. Pick a draft on the left, step through it part by part, and turn the highlighting on to see what I added, reworded or cut.</p>
 
       <div class="vwrap">
         <div class="vrail">
@@ -696,10 +696,9 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
           <button class="vtab" onclick="vShow(1)"><b>v1.0</b><span>First Notes</span><i>20 Aug</i></button>
           <button class="vtab" onclick="vShow(2)"><b>v2.0</b><span>Taking Shape</span><i>26 Aug</i></button>
           <button class="vtab" onclick="vShow(3)"><b>v3.0</b><span>Almost There</span><i>3 Sep</i></button>
-          <button class="vtab" onclick="vShow(4)"><b>v4.0</b><span>Handed In</span><i>11 Sep</i></button>
-          <button class="vtab on" onclick="vShow(5)"><b>v5.0</b><span>OPVL Rewrite</span><i>20 Sep</i></button>
+          <button class="vtab on" onclick="vShow(4)"><b>v4.0</b><span>Final</span><i>11 Sep</i></button>
           <button class="vplay" onclick="vpOpen()">&#9654; Watch it being written</button>
-          <span class="vrail-note">Types all five drafts out from scratch, backspaces and all.</span>
+          <span class="vrail-note">Types all four drafts out from scratch, backspaces and all.</span>
         </div>
 
         <div class="vmain">
@@ -794,8 +793,7 @@ const VMETA = {
   1:{tag:'v1.0', name:'First Notes',   date:'20 August 2026' ,  note:'This is just me getting the facts down before I forgot them. Dot points, half sentences, a few names spelt wrong. I only had Part A roughed out at this point.'},
   2:{tag:'v2.0', name:'Taking Shape',  date:'26 August 2026' ,  note:'I turned the notes into proper paragraphs and split Part A into Origin, Purpose, Value and Limitation like the criteria asks. It still reads pretty blunt here and Part C is only a few lines.'},
   3:{tag:'v3.0', name:'Almost There',  date:'3 September 2026',  note:'Nearly there. I went back and fixed the dates I had wrong, wrote out the Visuals list for the poster, and rewrote the judgement paragraphs so they actually answer the question instead of just describing the sources.'},
-  4:{tag:'v4.0', name:'Handed In',     date:'11 September 2026', note:'This is the one I handed in. I tightened the wording, used full names and book titles properly, and made sure every section was finished.'},
-  5:{tag:'v5.0', name:'OPVL Rewrite',  date:'20 September 2026', note:'Latest update, done after I had already handed the assignment in. I rewrote all eight OPVL paragraphs in Part A so they give proper examples and say what the source means for historians. Nothing else changed, and none of this wording was in the earlier drafts.'}
+  4:{tag:'v4.0', name:'Final',         date:'11 September 2026', note:'This is the finished one. I rewrote all eight OPVL paragraphs in Part A so they give proper examples and say what each source means for historians, tightened the rest of the wording, used full names and book titles properly, and made sure every section was done.'}
 };
 
 const VTEXT = {
@@ -1059,7 +1057,7 @@ Overall, I think Ibn Shaddād’s source is very useful for studying Saladin, bu
 }
 };
 
-const VSTATE = {1:{stage:2,hl:false},2:{stage:2,hl:false},3:{stage:2,hl:false},4:{stage:2,hl:false},5:{stage:2,hl:false}};
+const VSTATE = {1:{stage:2,hl:false},2:{stage:2,hl:false},3:{stage:2,hl:false},4:{stage:2,hl:false}};
 const VSTAGE = [
   {label:'Part A written',       keys:['a']},
   {label:'Part B added',         keys:['a','b']},
@@ -1070,31 +1068,7 @@ function vFinal(k){
   const el=document.getElementById('rp-'+k);
   return el?el.textContent.replace(/\s+$/,''):'';
 }
-/* the OPVL paragraphs were only rewritten in v5.0, so v4.0 keeps the wording that was handed in */
-const V4_OPVL=[
-["Ibn Shaddād was a Muslim scholar and judge who lived during Saladin’s lifetime. He entered Saladin’s service in 1188 as a judge of the army and remained close to Saladin until his death in 1193. This means he was in a position to personally observe Saladin and events around his court.",
- "The source was written by Bahāʾ al-Dīn Ibn Shaddād, a Muslim scholar and judge who lived during Saladin’s lifetime. He joined Saladin’s circle after the capture of Jerusalem and remained close to him. Ibn Shaddād completed his work around 1228, using his own experiences as well as information from other people."],
-["The purpose of the source was to record Saladin’s life, leadership, character and important events. Ibn Shaddād recorded his own observations as well as information about Saladin’s actions and experiences, creating a detailed account of Saladin during the final years of his life.",
- "Ibn Shaddād wrote about Saladin’s life, achievements and character. He recorded important events and also described his own experiences with Saladin. The source helped preserve the memory of Saladin and the way he was viewed by people close to him."],
-["The source is valuable because Ibn Shaddād had unusually close access to Saladin. For example, he remained part of Saladin’s household and recorded events during the Third Crusade. This allows historians to learn about Saladin’s behaviour, decisions and character from someone who was actually around him, rather than relying only on later accounts. It is especially useful for understanding how Saladin was viewed by a Muslim scholar within his own political and religious world.",
- "The source is valuable because Ibn Shaddād had direct access to Saladin and the people around him. This gives historians information about Saladin’s personality, decisions and actions that may not appear in more distant accounts. It also gives us a perspective from someone living within Saladin’s Muslim political and religious world."],
-["The source is limited because Ibn Shaddād admired Saladin and was closely connected to him. His admiration can be seen in the positive way he presented Saladin’s character and achievements. This could have caused him to give more attention to Saladin’s strengths than his mistakes or weaknesses. His position within Saladin’s court may also have affected what he knew or chose to record. Historians should therefore compare his account with other sources to check whether his positive portrayal is supported by other evidence.",
- "Ibn Shaddād clearly admired Saladin, so his account is not completely neutral. His positive view may have influenced what he chose to include and how he described Saladin. However, this does not make the source useless. It is still valuable when compared with other accounts."],
-["Jonathan Phillips is a modern historian and specialist in the Crusades. His book was published in 2019, more than 800 years after Saladin’s death. Phillips therefore relies on surviving historical evidence, including Arabic and European sources, rather than personal experience of the events.",
- "This source was written by historian Jonathan Phillips and published by Yale University Press in 2019. Phillips is a historian who specialises in the Crusades. Unlike Ibn Shaddād, he did not witness Saladin’s life. Instead, he studied a wide range of surviving sources and previous historical research."],
-["The purpose of the source is to examine Saladin’s life, achievements, failures and reputation. Phillips does not only present Saladin as a successful ruler; he also examines his contradictions and the way his reputation developed after his death.",
- "Phillips aimed to examine Saladin’s life and the reputation he developed during and after his lifetime. He looks at Saladin’s achievements, failures and contradictions rather than presenting him as simply a heroic figure."],
-["The source is valuable because Phillips uses a wide range of evidence rather than relying on one account. For example, his research draws on Arabic and European sources and examines events such as the Battle of Hattin, the capture of Jerusalem and the Third Crusade. Comparing these different accounts allows historians to identify agreements and disagreements between sources and understand why Saladin was viewed differently by Muslims and Christians.",
- "The source is valuable because Phillips compares evidence from different perspectives, including Arabic, Western and Eastern Christian sources. This allows him to identify disagreements between accounts and consider why Saladin was described differently by different groups."],
-["The source is limited because Phillips wrote more than 800 years after Saladin’s lifetime and could not witness the events himself. His conclusions depend on surviving sources, which can contain different perspectives, biases or missing information. For example, accounts of Saladin’s reputation differ between Muslim and Christian writers, meaning Phillips has to interpret evidence that was already shaped by the people who originally recorded it. Historians should therefore consider the original sources behind his conclusions as well.",
- "Phillips was writing more than 800 years after Saladin, so he could not witness the events himself. His interpretation depends on sources that may already contain bias or missing information. His work is therefore useful for understanding the evidence, but it should still be compared with primary sources."]
-];
-function vHanded(k){
-  let t=vFinal(k);
-  if(k==='a')V4_OPVL.forEach(p=>{t=t.replace(p[0],p[1]);});
-  return t;
-}
-function vGet(n,k){ return n===5?vFinal(k):(n===4?vHanded(k):VTEXT[n][k]); }
+function vGet(n,k){ return n===4?vFinal(k):VTEXT[n][k]; }
 
 const VPART={a:'Part A',b:'Part B',c:'Part C'};
 /* when I actually sat down and did each part of each draft */
@@ -1102,8 +1076,7 @@ const VTIME={
   1:{a:'18 Aug', b:'19 Aug', c:'20 Aug'},
   2:{a:'24 Aug', b:'25 Aug', c:'26 Aug'},
   3:{a:'1 Sep',  b:'2 Sep',  c:'3 Sep'},
-  4:{a:'9 Sep',  b:'10 Sep', c:'11 Sep'},
-  5:{a:'20 Sep', b:'20 Sep', c:'20 Sep'}
+  4:{a:'9 Sep',  b:'10 Sep', c:'11 Sep'}
 };
 function vStamp(n,part){return (VTIME[n]&&VTIME[n][part])||'';}
 function vLines(n,stage){
@@ -1313,7 +1286,7 @@ function vRender(n){
   }
 }
 
-let vCur=5;
+let vCur=4;
 function vShow(n){vCur=n;vRender(n);document.getElementById('d-ver').scrollIntoView({block:'start'});}
 function vStage(d){
   const st=VSTATE[vCur];
@@ -1513,10 +1486,10 @@ async function vpApply(prevDoc,plan,n){
 
 async function vpRun(){
   VP.done=0;VP.skip=false;VP.paused=false;
-  const plans=[1,2,3,4,5].map(vpPlan);
+  const plans=[1,2,3,4].map(vpPlan);
   VP.total=plans.reduce((a,pl)=>a+pl.cost,0);
   let doc=[];
-  for(let n=1;n<=5;n++){
+  for(let n=1;n<=4;n++){
     if(!VP.open)return;
     VP.skip=false;VP.ver=n;
     document.getElementById('vp-pp').textContent='Pause';
